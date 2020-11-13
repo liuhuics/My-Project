@@ -1,0 +1,4 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.smk.schedule.config.elasticjobconfig.RegistryCenterConfiguration,\
+com.smk.schedule.config.elasticjobconfig.ElasticJobAutoConfiguration

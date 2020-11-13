@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smk.common.dao.SysRolePermitMapper">
+    <resultMap id="BaseResultMap" type="com.smk.common.model.SysRolePermit">
+
+        <!-- 角色id -->
+        <id column="ROLE_ID" jdbcType="DECIMAL" property="roleId"/>
+
+        <!-- 权限ID -->
+        <id column="PERM_ID" jdbcType="DECIMAL" property="permId"/>
+
+        <!-- 创建时间 -->
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime"/>
+
+    </resultMap>
+    <sql id="Base_Column_List">
+    ROLE_ID, PERM_ID, CREATE_TIME
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="com.smk.common.model.SysRolePermitKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from SYS_ROLE_PERMIT
+        where ROLE_ID = #{roleId,jdbcType=DECIMAL}
+        and PERM_ID = #{permId,jdbcType=DECIMAL}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.smk.common.model.SysRolePermitKey">
+    delete from SYS_ROLE_PERMIT
+    where ROLE_ID = #{roleId,jdbcType=DECIMAL}
+      and PERM_ID = #{permId,jdbcType=DECIMAL}
+  </delete>
+
+    <insert id="insert">
+    insert into SYS_ROLE_PERMIT (ROLE_ID, PERM_ID, CREATE_TIME)
+    values (#{roleId,jdbcType=DECIMAL}, #{permId,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertSelective">
+        insert into SYS_ROLE_PERMIT
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roleId != null">
+                ROLE_ID,
+            </if>
+            <if test="permId != null">
+                PERM_ID,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roleId != null">
+                #{roleId,jdbcType=DECIMAL},
+            </if>
+            <if test="permId != null">
+                #{permId,jdbcType=DECIMAL},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective">
+        update SYS_ROLE_PERMIT
+        <set>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ROLE_ID = #{roleId,jdbcType=DECIMAL}
+        and PERM_ID = #{permId,jdbcType=DECIMAL}
+    </update>
+    <update id="updateByPrimaryKey">
+    update SYS_ROLE_PERMIT
+    set CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where ROLE_ID = #{roleId,jdbcType=DECIMAL}
+      and PERM_ID = #{permId,jdbcType=DECIMAL}
+  </update>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into SYS_ROLE_PERMIT (
+        ROLE_ID,
+        PERM_ID,
+        CREATE_TIME
+        )
+        (
+        <foreach collection="recordList" index="index" item="item" separator="union all">
+            (
+            select
+            #{item.roleId,jdbcType=DECIMAL},
+            #{item.permId,jdbcType=DECIMAL},
+            #{item.createTime,jdbcType=TIMESTAMP}
+            from dual
+            )
+        </foreach>
+        )
+    </insert>
+
+    <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-04-09 11:42:05 ### -->
+
+
+    <!-- Your codes goes here!!! -->
+
+    <select id="getPermitsByRoleId" resultType="com.smk.common.model.SysPermission">
+      select p.PERM_CODE,
+      p.ID,
+      p.PERM_NAME,
+      p.PID,
+      p.URL,
+      p.REMARK from sys_permission p join sys_role_permit r on  p.id = r.perm_id
+      where r.role_id=#{roleId}
+  </select>
+
+    <select id="getRolesByPermId" resultType="SysRole">
+        select r.id,r.role_name,r.role_code,r.admin,r.remark
+        from sys_role  r join sys_role_permit p
+        on r.id = p.role_id
+        where p.perm_id=#{permId}
+    </select>
+
+    <delete id="deletePermitsByRoleId">
+        delete from sys_role_permit where role_id=#{roleId}
+    </delete>
+
+</mapper>

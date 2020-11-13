@@ -1,0 +1,81 @@
+server:
+  port: 18089
+  servlet:
+    context-path: /loan/business
+
+#dataSource配置
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      url: jdbc:oracle:thin:@192.168.23.52:1521/csdb
+      username: txhmls
+      password: 123456
+      initial-size: 5 #初始化连接数
+      max-active: 30 #最大连接数
+      max-wait: 10000 #获取链接最大等待时间
+      min-idle: 5 #最小连接数
+      #是否缓存preparedStatement，也就是PSCache,PSCache对支持游标的数据库性能提升巨大，比如说oracle,在mysql下建议关闭。
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      #监控统计的stat,以及防sql注入的wall
+      filters: stat,wall,slf4j
+      filter: #statFilter配置
+        stat:
+          log-slow-sql: true #记录慢sql
+          slow-sql-millis: 200 #慢sql时间，单位毫秒，大于此时间视为慢sql
+          merge-sql: true #合并sql
+      validation-query: SELECT 'x' from dual
+      time-between-eviction-runs-millis: 60000 #空闲链接检查时间间隔
+      min-evictable-idle-time-millis: 300000 #空闲链接最小空闲时间
+
+  redis:
+    host: 192.168.23.209
+    port: 6379
+    #  sentinel:
+    #    master: master
+    #    nodes: 192.168.24.33:26379,192.168.24.31:26379,192.168.24.32:26379
+    #  password:
+    database: 0
+    jedis:
+      pool:
+        max-active: 10
+        max-wait: 3000ms
+        max-idle: 10
+        min-idle: 0
+        timeout: 2000
+
+  #不启用redis
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration,org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+
+  #国际化配置文件
+  messages:
+    basename: i18n/messages
+
+#mybatis配置文件
+mybatis:
+  config-location: classpath:config/mybatis-config.xml
+  mapper-locations: classpath:mapper/*.xml
+
+#pageHelper配置
+pagehelper:
+  helperDialect: oracle
+  #     pagehelper.reasonable： 分页合理化参数，默认值为false。当该参数设置为 true 时，pageNum<=0 时会查询第一页， pageNum>pages（超过总数时），会查询最后一页。默认false 时，直接根据参数进行查询。
+  #  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+#ftp配置
+ftp:
+  host: 192.168.1.122
+  port: 21
+  username: ftpuser
+  password: ftpuser
+  defaultUploadDir: /home/ftpuser/test
+
+
+#netty
+netty:
+  server:
+    port: 9092

@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smk.common.dao.SysUserMapper">
+    <resultMap id="BaseResultMap" type="com.smk.common.model.SysUser">
+
+        <!-- 主键 -->
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+
+        <!-- 角色 id -->
+        <result column="ROLE_ID" jdbcType="DECIMAL" property="roleId"/>
+
+        <!-- 用户名 -->
+        <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+
+        <!-- 用户密码 -->
+        <result column="USER_PWD" jdbcType="VARCHAR" property="userPwd"/>
+
+        <!-- 手机号 -->
+        <result column="PHONE" jdbcType="VARCHAR" property="phone"/>
+
+        <!-- 机构id -->
+        <result column="DEPART_ID" jdbcType="DECIMAL" property="departId"/>
+
+        <!-- 用户状态，1-有效，0-无效 -->
+        <result column="STATUS" jdbcType="CHAR" property="status"/>
+
+        <!-- 创建时间 -->
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime"/>
+
+        <!-- 更新时间 -->
+        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <resultMap id="withRoleMap" type="com.smk.common.vo.admin.SysUserResp" extends="BaseResultMap">
+        <!-- 角色名称 -->
+        <result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName"/>
+
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+    ID, ROLE_ID, USER_NAME, USER_PWD, PHONE, DEPART_ID, STATUS, CREATE_TIME, UPDATE_TIME
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from SYS_USER
+        where ID = #{id,jdbcType=DECIMAL}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from SYS_USER
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+    <insert id="insert">
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+            SELECT SYS_USER_SEQ.nextval AS ID FROM dual
+        </selectKey>
+        insert into SYS_USER (ID, ROLE_ID, USER_NAME,
+        USER_PWD, PHONE, DEPART_ID,
+        STATUS, CREATE_TIME, UPDATE_TIME
+        )
+        values (#{id,jdbcType=DECIMAL}, #{roleId,jdbcType=DECIMAL}, #{userName,jdbcType=VARCHAR},
+        #{userPwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{departId,jdbcType=DECIMAL},
+        #{status,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <insert id="insertSelective">
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+            SELECT SYS_USER_SEQ.nextval AS ID FROM dual
+        </selectKey>
+        insert into SYS_USER
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="roleId != null">
+                ROLE_ID,
+            </if>
+            <if test="userName != null">
+                USER_NAME,
+            </if>
+            <if test="userPwd != null">
+                USER_PWD,
+            </if>
+            <if test="phone != null">
+                PHONE,
+            </if>
+            <if test="departId != null">
+                DEPART_ID,
+            </if>
+            <if test="status != null">
+                STATUS,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=DECIMAL},
+            </if>
+            <if test="roleId != null">
+                #{roleId,jdbcType=DECIMAL},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userPwd != null">
+                #{userPwd,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="departId != null">
+                #{departId,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=CHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective">
+        update SYS_USER
+        <set>
+            <if test="roleId != null">
+                ROLE_ID = #{roleId,jdbcType=DECIMAL},
+            </if>
+            <if test="userName != null">
+                USER_NAME = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userPwd != null">
+                USER_PWD = #{userPwd,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                PHONE = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="departId != null">
+                DEPART_ID = #{departId,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null">
+                STATUS = #{status,jdbcType=CHAR},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=DECIMAL}
+    </update>
+    <update id="updateByPrimaryKey">
+    update SYS_USER
+    set ROLE_ID = #{roleId,jdbcType=DECIMAL},
+      USER_NAME = #{userName,jdbcType=VARCHAR},
+      USER_PWD = #{userPwd,jdbcType=VARCHAR},
+      PHONE = #{phone,jdbcType=VARCHAR},
+      DEPART_ID = #{departId,jdbcType=DECIMAL},
+      STATUS = #{status,jdbcType=CHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into SYS_USER (
+        ID,
+        ROLE_ID,
+        USER_NAME,
+        USER_PWD,
+        PHONE,
+        DEPART_ID,
+        STATUS,
+        CREATE_TIME,
+        UPDATE_TIME
+        )
+        (
+        <foreach collection="recordList" index="index" item="item" separator="union all">
+            (
+            select
+            #{item.id,jdbcType=DECIMAL},
+            #{item.roleId,jdbcType=DECIMAL},
+            #{item.userName,jdbcType=VARCHAR},
+            #{item.userPwd,jdbcType=VARCHAR},
+            #{item.phone,jdbcType=VARCHAR},
+            #{item.departId,jdbcType=DECIMAL},
+            #{item.status,jdbcType=CHAR},
+            #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updateTime,jdbcType=TIMESTAMP}
+            from dual
+            )
+        </foreach>
+        )
+    </insert>
+
+    <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-04-08 16:50:19 ### -->
+
+
+    <!-- Your codes goes here!!! -->
+    <select id="getValidUserByUserName" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_user
+        WHERE user_name = #{userName}
+        and status = '1'
+    </select>
+
+    <select id="getByUserName" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_user
+        WHERE user_name = #{userName}
+    </select>
+
+    <select id="getUsers" resultMap="withRoleMap" parameterType="SysUser">
+        SELECT u.id,u.role_id,u.user_name,u.phone,u.status,r.role_name
+        FROM sys_user u join sys_role r
+        on u.role_id = r.id
+        <where>
+            <if test="roleId != null">
+                u.ROLE_ID = #{roleId,jdbcType=DECIMAL}
+            </if>
+            <if test="userName != null">
+                and u.USER_NAME = #{userName,jdbcType=VARCHAR}
+            </if>
+            <if test="userPwd != null">
+                and u.USER_PWD = #{userPwd,jdbcType=VARCHAR}
+            </if>
+            <if test="phone != null">
+                and u.PHONE = #{phone,jdbcType=VARCHAR}
+            </if>
+            <if test="departId != null">
+                and u.DEPART_ID = #{departId,jdbcType=DECIMAL}
+            </if>
+        </where>
+    </select>
+
+
+    <update id="updatePwdByUserName">
+        update sys_user set user_pwd = #{userPwd}
+        where user_name = #{userName}
+    </update>
+</mapper>

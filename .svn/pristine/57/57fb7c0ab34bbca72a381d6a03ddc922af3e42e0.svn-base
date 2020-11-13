@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smk.common.dao.SysPermissionMapper">
+    <resultMap id="BaseResultMap" type="com.smk.common.model.SysPermission">
+
+        <!-- 主键 -->
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+
+        <!-- 权限编码 -->
+        <result column="PERM_CODE" jdbcType="VARCHAR" property="permCode"/>
+
+        <!-- 权限名称 -->
+        <result column="PERM_NAME" jdbcType="VARCHAR" property="permName"/>
+
+        <!-- 父权限ID -->
+        <result column="PID" jdbcType="DECIMAL" property="pid"/>
+
+        <!-- 权限对应的页面地址 -->
+        <result column="URL" jdbcType="VARCHAR" property="url"/>
+
+        <!-- 备注 -->
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+
+        <!-- 创建时间 -->
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime"/>
+
+        <!-- 更新时间 -->
+        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    ID, PERM_CODE, PERM_NAME, PID, URL, REMARK, CREATE_TIME, UPDATE_TIME
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from SYS_PERMISSION
+        where ID = #{id,jdbcType=DECIMAL}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from SYS_PERMISSION
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+    <insert id="insert">
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+            SELECT SYS_PERMISSION_SEQ.nextval AS ID FROM dual
+        </selectKey>
+        insert into SYS_PERMISSION (ID, PERM_CODE, PERM_NAME,
+        PID, URL, REMARK, CREATE_TIME,
+        UPDATE_TIME)
+        values (#{id,jdbcType=DECIMAL}, #{permCode,jdbcType=VARCHAR}, #{permName,jdbcType=VARCHAR},
+        #{pid,jdbcType=DECIMAL}, #{url,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective">
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+            SELECT SYS_PERMISSION_SEQ.nextval AS ID FROM dual
+        </selectKey>
+        insert into SYS_PERMISSION
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="permCode != null">
+                PERM_CODE,
+            </if>
+            <if test="permName != null">
+                PERM_NAME,
+            </if>
+            <if test="pid != null">
+                PID,
+            </if>
+            <if test="url != null">
+                URL,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=DECIMAL},
+            </if>
+            <if test="permCode != null">
+                #{permCode,jdbcType=VARCHAR},
+            </if>
+            <if test="permName != null">
+                #{permName,jdbcType=VARCHAR},
+            </if>
+            <if test="pid != null">
+                #{pid,jdbcType=DECIMAL},
+            </if>
+            <if test="url != null">
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective">
+        update SYS_PERMISSION
+        <set>
+            <if test="permCode != null">
+                PERM_CODE = #{permCode,jdbcType=VARCHAR},
+            </if>
+            <if test="permName != null">
+                PERM_NAME = #{permName,jdbcType=VARCHAR},
+            </if>
+            <if test="pid != null">
+                PID = #{pid,jdbcType=DECIMAL},
+            </if>
+            <if test="url != null">
+                URL = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=DECIMAL}
+    </update>
+    <update id="updateByPrimaryKey">
+    update SYS_PERMISSION
+    set PERM_CODE = #{permCode,jdbcType=VARCHAR},
+      PERM_NAME = #{permName,jdbcType=VARCHAR},
+      PID = #{pid,jdbcType=DECIMAL},
+      URL = #{url,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into SYS_PERMISSION (
+        ID,
+        PERM_CODE,
+        PERM_NAME,
+        PID,
+        URL,
+        REMARK,
+        CREATE_TIME,
+        UPDATE_TIME
+        )
+        (
+        <foreach collection="recordList" index="index" item="item" separator="union all">
+            (
+            select
+            #{item.id,jdbcType=DECIMAL},
+            #{item.permCode,jdbcType=VARCHAR},
+            #{item.permName,jdbcType=VARCHAR},
+            #{item.pid,jdbcType=DECIMAL},
+            #{item.url,jdbcType=VARCHAR},
+            #{item.remark,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updateTime,jdbcType=TIMESTAMP}
+            from dual
+            )
+        </foreach>
+        )
+    </insert>
+
+    <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-04-09 13:53:47 ### -->
+
+
+    <!-- Your codes goes here!!! -->
+    <select id="getAllPermits" resultType="com.smk.common.model.SysPermission">
+      select PERM_CODE,
+      ID,
+      PERM_NAME,
+      PID,
+      URL,
+      REMARK from sys_permission
+  </select>
+
+    <select id="getAllChildPermits" resultType="com.smk.common.model.SysPermission">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_permission
+        where pid != 0
+        order by id
+    </select>
+
+
+    <!--如果仅查最后一级权限，则如下-->
+    <!--from sys_permission a join sys_permission b-->
+    <!--on a.pid = b.id-->
+    <!--where a.pid != 0-->
+    <select id="getAllPermitsWithPName" resultType="com.smk.common.vo.admin.SysPermissionResp">
+      select
+      a.ID,
+      a.PERM_CODE,
+      a.PERM_NAME,
+      a.PID,
+      a.URL,
+      a.REMARK ,b.PERM_NAME as parent_name
+    from sys_permission a left join sys_permission b
+    on a.pid = b.id
+    order by a.ID
+  </select>
+
+
+    <select id="getChildPermitsByPid" resultType="com.smk.common.model.SysPermission">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_permission
+        where pid = #{pId}
+    </select>
+
+    <select id="getPermitsByCodeOrName" resultType="com.smk.common.model.SysPermission">
+        select
+        <include refid="Base_Column_List"></include>
+        from sys_permission
+        <where>
+            <if test="permName != null">
+                 perm_name = #{permName,jdbcType=VARCHAR}
+            </if>
+            <if test="permCode != null">
+                or perm_code = #{permCode,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

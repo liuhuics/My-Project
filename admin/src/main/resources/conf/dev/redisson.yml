@@ -1,0 +1,27 @@
+#单机配置，默认值可查看 SingleServerConfig
+singleServerConfig:
+  idleConnectionTimeout: 10000
+  pingTimeout: 1000
+  connectTimeout: 10000
+  timeout: 3000
+  retryAttempts: 3
+  retryInterval: 1500
+  reconnectionTimeout: 3000
+  failedAttempts: 3
+  password: null
+  subscriptionsPerConnection: 5
+  clientName: null
+#  address: "redis://192.168.23.209:6379"
+  address: "redis://localhost:6379"
+  # 最小空闲连接数
+  connectionMinimumIdleSize: 32
+  # 连接池大小
+  connectionPoolSize: 64
+  database: 0
+  dnsMonitoringInterval: -1
+# 线程池数量,默认值: 当前处理核数量 * 2
+threads: 0
+nettyThreads: 0
+#不可用jackjson或String类型的，管理session时会有问题
+codec: !<org.redisson.codec.FstCodec> {}
+"transportMode": "NIO"

@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smk.common.dao.DailyBankReportMapper">
+  <resultMap id="BaseResultMap" type="com.smk.common.model.DailyBankReport">
+    
+    <!-- 主键id -->
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    
+    <!-- 产品id -->
+    <result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+    
+    <!-- 日报时间 -->
+    <result column="REPORT_DATE" jdbcType="CHAR" property="reportDate" />
+    
+    <!-- 完成申请信息填写人次 -->
+    <result column="APPLY_NUM" jdbcType="DECIMAL" property="applyNum" />
+    
+    <!-- 当完成申请信息填写人次 -->
+    <result column="DAY_APPLY_NUM" jdbcType="DECIMAL" property="dayApplyNum" />
+    
+    <!-- 完成申请信息填写人数 -->
+    <result column="DIST_APPLY_NUM" jdbcType="DECIMAL" property="distApplyNum" />
+    
+    <!-- 当完成申请信息填写人数 -->
+    <result column="DIST_DAY_APPLY_NUM" jdbcType="DECIMAL" property="distDayApplyNum" />
+    
+    <!-- 授信人数 -->
+    <result column="CREDIT_NUM" jdbcType="DECIMAL" property="creditNum" />
+    
+    <!-- 当日授信人数 -->
+    <result column="DAY_CREDIT_NUM" jdbcType="DECIMAL" property="dayCreditNum" />
+    
+    <!-- 授信总金额 -->
+    <result column="CREDIT_AMT" jdbcType="DECIMAL" property="creditAmt" />
+    
+    <!-- 当日授信总金额 -->
+    <result column="DAY_CREDIT_AMT" jdbcType="DECIMAL" property="dayCreditAmt" />
+    
+    <!-- 授信通过率%=授信人数/完成申请信息填写人数，保留两位小数 -->
+    <result column="CREDIT_PASS_RATE" jdbcType="DECIMAL" property="creditPassRate" />
+    
+    <!-- 借款人数 -->
+    <result column="LOAN_NUM" jdbcType="DECIMAL" property="loanNum" />
+    
+    <!-- 当日借款人数 -->
+    <result column="DAY_LOAN_NUM" jdbcType="DECIMAL" property="dayLoanNum" />
+    
+    <!-- 借款笔数 -->
+    <result column="LOAN_COUNT" jdbcType="DECIMAL" property="loanCount" />
+    
+    <!-- 借款金额 -->
+    <result column="LOAN_AMT" jdbcType="DECIMAL" property="loanAmt" />
+    
+    <!-- 最新贷款总余额 -->
+    <result column="LOAN_BANLANCE" jdbcType="DECIMAL" property="loanBanlance" />
+    
+    <!-- 还款笔数 -->
+    <result column="REPAY_COUNT" jdbcType="DECIMAL" property="repayCount" />
+    
+    <!-- 还款金额 -->
+    <result column="REPAY_AMT" jdbcType="DECIMAL" property="repayAmt" />
+    
+    <!-- 逾期笔数 -->
+    <result column="DELAY_COUNT" jdbcType="DECIMAL" property="delayCount" />
+    
+    <!-- 逾期金额 -->
+    <result column="DELAY_AMT" jdbcType="DECIMAL" property="delayAmt" />
+    
+    <!-- 已收利息 -->
+    <result column="TOTAL_INTEREST" jdbcType="DECIMAL" property="totalInterest" />
+    
+    <!-- 已收罚息 -->
+    <result column="TOTAL_PENALTY" jdbcType="DECIMAL" property="totalPenalty" />
+    
+    <!-- 每日新增授信通过客户的平均利率 -->
+    <result column="AVG_DAY_INTEREST_RATE" jdbcType="DECIMAL" property="avgDayInterestRate" />
+    
+    <!-- 创建时间 -->
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, PROD_ID, REPORT_DATE, APPLY_NUM, DAY_APPLY_NUM, DIST_APPLY_NUM, DIST_DAY_APPLY_NUM, 
+    CREDIT_NUM, DAY_CREDIT_NUM, CREDIT_AMT, DAY_CREDIT_AMT, CREDIT_PASS_RATE, LOAN_NUM, 
+    DAY_LOAN_NUM, LOAN_COUNT, LOAN_AMT, LOAN_BANLANCE, REPAY_COUNT, REPAY_AMT, DELAY_COUNT, 
+    DELAY_AMT, TOTAL_INTEREST, TOTAL_PENALTY, AVG_DAY_INTEREST_RATE, CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from DAILY_BANK_REPORT
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+
+  <delete id="deleteByProdIdAndReportDate" parameterType="com.smk.common.model.DailyBankReport">
+    delete from DAILY_BANK_REPORT
+    where REPORT_DATE = #{reportDate,jdbcType=VARCHAR} and PROD_ID = #{prodId,jdbcType=VARCHAR}
+  </delete>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from DAILY_BANK_REPORT
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+
+  <insert id="insert">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT DAILY_BANK_REPORT_SEQ.nextval AS ID FROM dual
+    </selectKey>
+    insert into DAILY_BANK_REPORT (ID, PROD_ID, REPORT_DATE, 
+      APPLY_NUM, DAY_APPLY_NUM, DIST_APPLY_NUM, 
+      DIST_DAY_APPLY_NUM, CREDIT_NUM, DAY_CREDIT_NUM, 
+      CREDIT_AMT, DAY_CREDIT_AMT, CREDIT_PASS_RATE, 
+      LOAN_NUM, DAY_LOAN_NUM, LOAN_COUNT, 
+      LOAN_AMT, LOAN_BANLANCE, REPAY_COUNT, 
+      REPAY_AMT, DELAY_COUNT, DELAY_AMT, 
+      TOTAL_INTEREST, TOTAL_PENALTY, AVG_DAY_INTEREST_RATE, 
+      CREATE_TIME)
+    values (#{id,jdbcType=DECIMAL}, #{prodId,jdbcType=VARCHAR}, #{reportDate,jdbcType=CHAR}, 
+      #{applyNum,jdbcType=DECIMAL}, #{dayApplyNum,jdbcType=DECIMAL}, #{distApplyNum,jdbcType=DECIMAL}, 
+      #{distDayApplyNum,jdbcType=DECIMAL}, #{creditNum,jdbcType=DECIMAL}, #{dayCreditNum,jdbcType=DECIMAL}, 
+      #{creditAmt,jdbcType=DECIMAL}, #{dayCreditAmt,jdbcType=DECIMAL}, #{creditPassRate,jdbcType=DECIMAL}, 
+      #{loanNum,jdbcType=DECIMAL}, #{dayLoanNum,jdbcType=DECIMAL}, #{loanCount,jdbcType=DECIMAL}, 
+      #{loanAmt,jdbcType=DECIMAL}, #{loanBanlance,jdbcType=DECIMAL}, #{repayCount,jdbcType=DECIMAL}, 
+      #{repayAmt,jdbcType=DECIMAL}, #{delayCount,jdbcType=DECIMAL}, #{delayAmt,jdbcType=DECIMAL}, 
+      #{totalInterest,jdbcType=DECIMAL}, #{totalPenalty,jdbcType=DECIMAL}, #{avgDayInterestRate,jdbcType=DECIMAL}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT DAILY_BANK_REPORT_SEQ.nextval AS ID FROM dual
+    </selectKey>
+    insert into DAILY_BANK_REPORT
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="prodId != null">
+        PROD_ID,
+      </if>
+      <if test="reportDate != null">
+        REPORT_DATE,
+      </if>
+      <if test="applyNum != null">
+        APPLY_NUM,
+      </if>
+      <if test="dayApplyNum != null">
+        DAY_APPLY_NUM,
+      </if>
+      <if test="distApplyNum != null">
+        DIST_APPLY_NUM,
+      </if>
+      <if test="distDayApplyNum != null">
+        DIST_DAY_APPLY_NUM,
+      </if>
+      <if test="creditNum != null">
+        CREDIT_NUM,
+      </if>
+      <if test="dayCreditNum != null">
+        DAY_CREDIT_NUM,
+      </if>
+      <if test="creditAmt != null">
+        CREDIT_AMT,
+      </if>
+      <if test="dayCreditAmt != null">
+        DAY_CREDIT_AMT,
+      </if>
+      <if test="creditPassRate != null">
+        CREDIT_PASS_RATE,
+      </if>
+      <if test="loanNum != null">
+        LOAN_NUM,
+      </if>
+      <if test="dayLoanNum != null">
+        DAY_LOAN_NUM,
+      </if>
+      <if test="loanCount != null">
+        LOAN_COUNT,
+      </if>
+      <if test="loanAmt != null">
+        LOAN_AMT,
+      </if>
+      <if test="loanBanlance != null">
+        LOAN_BANLANCE,
+      </if>
+      <if test="repayCount != null">
+        REPAY_COUNT,
+      </if>
+      <if test="repayAmt != null">
+        REPAY_AMT,
+      </if>
+      <if test="delayCount != null">
+        DELAY_COUNT,
+      </if>
+      <if test="delayAmt != null">
+        DELAY_AMT,
+      </if>
+      <if test="totalInterest != null">
+        TOTAL_INTEREST,
+      </if>
+      <if test="totalPenalty != null">
+        TOTAL_PENALTY,
+      </if>
+      <if test="avgDayInterestRate != null">
+        AVG_DAY_INTEREST_RATE,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="prodId != null">
+        #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="reportDate != null">
+        #{reportDate,jdbcType=CHAR},
+      </if>
+      <if test="applyNum != null">
+        #{applyNum,jdbcType=DECIMAL},
+      </if>
+      <if test="dayApplyNum != null">
+        #{dayApplyNum,jdbcType=DECIMAL},
+      </if>
+      <if test="distApplyNum != null">
+        #{distApplyNum,jdbcType=DECIMAL},
+      </if>
+      <if test="distDayApplyNum != null">
+        #{distDayApplyNum,jdbcType=DECIMAL},
+      </if>
+      <if test="creditNum != null">
+        #{creditNum,jdbcType=DECIMAL},
+      </if>
+      <if test="dayCreditNum != null">
+        #{dayCreditNum,jdbcType=DECIMAL},
+      </if>
+      <if test="creditAmt != null">
+        #{creditAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="dayCreditAmt != null">
+        #{dayCreditAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="creditPassRate != null">
+        #{creditPassRate,jdbcType=DECIMAL},
+      </if>
+      <if test="loanNum != null">
+        #{loanNum,jdbcType=DECIMAL},
+      </if>
+      <if test="dayLoanNum != null">
+        #{dayLoanNum,jdbcType=DECIMAL},
+      </if>
+      <if test="loanCount != null">
+        #{loanCount,jdbcType=DECIMAL},
+      </if>
+      <if test="loanAmt != null">
+        #{loanAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="loanBanlance != null">
+        #{loanBanlance,jdbcType=DECIMAL},
+      </if>
+      <if test="repayCount != null">
+        #{repayCount,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAmt != null">
+        #{repayAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="delayCount != null">
+        #{delayCount,jdbcType=DECIMAL},
+      </if>
+      <if test="delayAmt != null">
+        #{delayAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="totalInterest != null">
+        #{totalInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="totalPenalty != null">
+        #{totalPenalty,jdbcType=DECIMAL},
+      </if>
+      <if test="avgDayInterestRate != null">
+        #{avgDayInterestRate,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update DAILY_BANK_REPORT
+    <set>
+      <if test="prodId != null">
+        PROD_ID = #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="reportDate != null">
+        REPORT_DATE = #{reportDate,jdbcType=CHAR},
+      </if>
+      <if test="applyNum != null">
+        APPLY_NUM = #{applyNum,jdbcType=DECIMAL},
+      </if>
+      <if test="dayApplyNum != null">
+        DAY_APPLY_NUM = #{dayApplyNum,jdbcType=DECIMAL},
+      </if>
+      <if test="distApplyNum != null">
+        DIST_APPLY_NUM = #{distApplyNum,jdbcType=DECIMAL},
+      </if>
+      <if test="distDayApplyNum != null">
+        DIST_DAY_APPLY_NUM = #{distDayApplyNum,jdbcType=DECIMAL},
+      </if>
+      <if test="creditNum != null">
+        CREDIT_NUM = #{creditNum,jdbcType=DECIMAL},
+      </if>
+      <if test="dayCreditNum != null">
+        DAY_CREDIT_NUM = #{dayCreditNum,jdbcType=DECIMAL},
+      </if>
+      <if test="creditAmt != null">
+        CREDIT_AMT = #{creditAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="dayCreditAmt != null">
+        DAY_CREDIT_AMT = #{dayCreditAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="creditPassRate != null">
+        CREDIT_PASS_RATE = #{creditPassRate,jdbcType=DECIMAL},
+      </if>
+      <if test="loanNum != null">
+        LOAN_NUM = #{loanNum,jdbcType=DECIMAL},
+      </if>
+      <if test="dayLoanNum != null">
+        DAY_LOAN_NUM = #{dayLoanNum,jdbcType=DECIMAL},
+      </if>
+      <if test="loanCount != null">
+        LOAN_COUNT = #{loanCount,jdbcType=DECIMAL},
+      </if>
+      <if test="loanAmt != null">
+        LOAN_AMT = #{loanAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="loanBanlance != null">
+        LOAN_BANLANCE = #{loanBanlance,jdbcType=DECIMAL},
+      </if>
+      <if test="repayCount != null">
+        REPAY_COUNT = #{repayCount,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAmt != null">
+        REPAY_AMT = #{repayAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="delayCount != null">
+        DELAY_COUNT = #{delayCount,jdbcType=DECIMAL},
+      </if>
+      <if test="delayAmt != null">
+        DELAY_AMT = #{delayAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="totalInterest != null">
+        TOTAL_INTEREST = #{totalInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="totalPenalty != null">
+        TOTAL_PENALTY = #{totalPenalty,jdbcType=DECIMAL},
+      </if>
+      <if test="avgDayInterestRate != null">
+        AVG_DAY_INTEREST_RATE = #{avgDayInterestRate,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey">
+    update DAILY_BANK_REPORT
+    set PROD_ID = #{prodId,jdbcType=VARCHAR},
+      REPORT_DATE = #{reportDate,jdbcType=CHAR},
+      APPLY_NUM = #{applyNum,jdbcType=DECIMAL},
+      DAY_APPLY_NUM = #{dayApplyNum,jdbcType=DECIMAL},
+      DIST_APPLY_NUM = #{distApplyNum,jdbcType=DECIMAL},
+      DIST_DAY_APPLY_NUM = #{distDayApplyNum,jdbcType=DECIMAL},
+      CREDIT_NUM = #{creditNum,jdbcType=DECIMAL},
+      DAY_CREDIT_NUM = #{dayCreditNum,jdbcType=DECIMAL},
+      CREDIT_AMT = #{creditAmt,jdbcType=DECIMAL},
+      DAY_CREDIT_AMT = #{dayCreditAmt,jdbcType=DECIMAL},
+      CREDIT_PASS_RATE = #{creditPassRate,jdbcType=DECIMAL},
+      LOAN_NUM = #{loanNum,jdbcType=DECIMAL},
+      DAY_LOAN_NUM = #{dayLoanNum,jdbcType=DECIMAL},
+      LOAN_COUNT = #{loanCount,jdbcType=DECIMAL},
+      LOAN_AMT = #{loanAmt,jdbcType=DECIMAL},
+      LOAN_BANLANCE = #{loanBanlance,jdbcType=DECIMAL},
+      REPAY_COUNT = #{repayCount,jdbcType=DECIMAL},
+      REPAY_AMT = #{repayAmt,jdbcType=DECIMAL},
+      DELAY_COUNT = #{delayCount,jdbcType=DECIMAL},
+      DELAY_AMT = #{delayAmt,jdbcType=DECIMAL},
+      TOTAL_INTEREST = #{totalInterest,jdbcType=DECIMAL},
+      TOTAL_PENALTY = #{totalPenalty,jdbcType=DECIMAL},
+      AVG_DAY_INTEREST_RATE = #{avgDayInterestRate,jdbcType=DECIMAL},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <insert id="batchInsert" parameterType="java.util.List">
+    insert into DAILY_BANK_REPORT (
+    ID,
+    PROD_ID,
+    REPORT_DATE,
+    APPLY_NUM,
+    DAY_APPLY_NUM,
+    DIST_APPLY_NUM,
+    DIST_DAY_APPLY_NUM,
+    CREDIT_NUM,
+    DAY_CREDIT_NUM,
+    CREDIT_AMT,
+    DAY_CREDIT_AMT,
+    CREDIT_PASS_RATE,
+    LOAN_NUM,
+    DAY_LOAN_NUM,
+    LOAN_COUNT,
+    LOAN_AMT,
+    LOAN_BANLANCE,
+    REPAY_COUNT,
+    REPAY_AMT,
+    DELAY_COUNT,
+    DELAY_AMT,
+    TOTAL_INTEREST,
+    TOTAL_PENALTY,
+    AVG_DAY_INTEREST_RATE,
+    CREATE_TIME
+    )
+    (
+    <foreach collection="recordList" index="index" item="item" separator="union all">
+      (
+      select
+      #{item.id,jdbcType=DECIMAL},
+      #{item.prodId,jdbcType=VARCHAR},
+      #{item.reportDate,jdbcType=CHAR},
+      #{item.applyNum,jdbcType=DECIMAL},
+      #{item.dayApplyNum,jdbcType=DECIMAL},
+      #{item.distApplyNum,jdbcType=DECIMAL},
+      #{item.distDayApplyNum,jdbcType=DECIMAL},
+      #{item.creditNum,jdbcType=DECIMAL},
+      #{item.dayCreditNum,jdbcType=DECIMAL},
+      #{item.creditAmt,jdbcType=DECIMAL},
+      #{item.dayCreditAmt,jdbcType=DECIMAL},
+      #{item.creditPassRate,jdbcType=DECIMAL},
+      #{item.loanNum,jdbcType=DECIMAL},
+      #{item.dayLoanNum,jdbcType=DECIMAL},
+      #{item.loanCount,jdbcType=DECIMAL},
+      #{item.loanAmt,jdbcType=DECIMAL},
+      #{item.loanBanlance,jdbcType=DECIMAL},
+      #{item.repayCount,jdbcType=DECIMAL},
+      #{item.repayAmt,jdbcType=DECIMAL},
+      #{item.delayCount,jdbcType=DECIMAL},
+      #{item.delayAmt,jdbcType=DECIMAL},
+      #{item.totalInterest,jdbcType=DECIMAL},
+      #{item.totalPenalty,jdbcType=DECIMAL},
+      #{item.avgDayInterestRate,jdbcType=DECIMAL},
+      #{item.createTime,jdbcType=TIMESTAMP}
+      from dual
+      )
+    </foreach>
+    )
+  </insert>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-03-26 14:18:07 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  
+</mapper>

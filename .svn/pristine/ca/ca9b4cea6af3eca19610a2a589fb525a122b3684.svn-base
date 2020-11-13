@@ -1,0 +1,115 @@
+package com.smk.business.netty.client;
+
+import com.smk.common.netty.constant.MsgType;
+import com.smk.common.netty.constant.NettyConstant;
+import com.smk.common.netty.message.HeartbeatRequestPacket;
+import com.smk.common.netty.message.HeartbeatResponsePacket;
+import com.smk.common.netty.message.RequestMsgPacket;
+import com.smk.common.util.SerialNumberUtils;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * @Description:
+ * @Project: finance-parent
+ * @author: liuhui
+ * @version: 1.0
+ * @since: JDK 1.8
+ * @Date: 2020/8/27 10:40
+ * Copyright (c) 2020, 96225.com.cn All Rights Reserved.
+ */
+@Component
+@Slf4j
+public class NettyClient {
+    @Value("${netty.server.host:localhost}")
+    private String host;
+
+    @Value("${netty.server.port:9092}")
+    private Integer port;
+
+    private SocketChannel socketChannel;
+
+    public void sendMsg(RequestMsgPacket requestMsgPacket) {
+        socketChannel.writeAndFlush(requestMsgPacket);
+    }
+
+    @PostConstruct
+    public void start() {
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        Bootstrap bootstrap = new Bootstrap();
+        bootstrap.group(workerGroup);
+        bootstrap.channel(NioSocketChannel.class);
+        bootstrap.option(ChannelOption.SO_KEEPALIVE, Boolean.TRUE);
+        bootstrap.option(ChannelOption.TCP_NODELAY, Boolean.TRUE);
+        bootstrap.handler(new NettyClientHandlerInitializer());
+
+        ChannelFuture future = null;
+        try {
+            future = bootstrap.connect(host, port).sync();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+//        future = connect(future, bootstrap);
+
+        log.info("启动NettyClient[{}]成功...", port);
+        //客户端断线重连逻辑
+        future.addListener((ChannelFutureListener) future1 -> {
+            if (future1.isSuccess()) {
+                log.info("连接Netty服务端成功");
+            } else {
+                log.info("连接失败，进行断线重连");
+
+                future1.channel().eventLoop().schedule(() -> {
+//                    try {
+                    start();
+//                    } catch (InterruptedException e) {
+//                        log.error("断线重连出错", e);
+//                    }
+                }, 20, TimeUnit.SECONDS);
+            }
+        });
+        socketChannel = (SocketChannel) future.channel();
+
+
+    }
+
+    private void sendPingPacket(){
+        HeartbeatRequestPacket packet = new HeartbeatRequestPacket();
+        socketChannel.writeAndFlush(packet);
+    }
+
+    private ChannelFuture connect(ChannelFuture future, Bootstrap bootstrap) {
+        try {
+            future = bootstrap.connect(host, port).sync();
+        } catch (Exception e) {
+            boolean isConnect = false;
+            while (!isConnect) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e1) {
+                    log.error("sleep时出错！", e);
+                }
+
+                connect(future, bootstrap);
+
+                isConnect = true;
+            }
+            log.error("连接失败");
+        }
+        return future;
+    }
+
+
+}

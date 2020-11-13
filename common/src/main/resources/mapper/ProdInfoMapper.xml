@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smk.common.dao.ProdInfoMapper">
+  <resultMap id="BaseResultMap" type="com.smk.common.model.ProdInfo">
+    <result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+    <result column="PROD_CNAME" jdbcType="VARCHAR" property="prodCname" />
+    <result column="PROD_TITLE" jdbcType="VARCHAR" property="prodTitle" />
+    <result column="DATE_CREATE" jdbcType="VARCHAR" property="dateCreate" />
+    <result column="INST_RELATE" jdbcType="VARCHAR" property="instRelate" />
+    <result column="PROD_STAT" jdbcType="VARCHAR" property="prodStat" />
+    <result column="PROD_DESC" jdbcType="VARCHAR" property="prodDesc" />
+    <result column="PROD_TEMPLATE" jdbcType="VARCHAR" property="prodTemplate" />
+    <result column="PROD_VIEW_XML" jdbcType="VARCHAR" property="prodViewXml" />
+    <result column="PROD_CTRL_PUB_XML" jdbcType="VARCHAR" property="prodCtrlPubXml" />
+    <result column="PROD_CTRL_SPEC_XML" jdbcType="VARCHAR" property="prodCtrlSpecXml" />
+    <result column="PROD_TYPE" jdbcType="VARCHAR" property="prodType" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.smk.common.model.ProdInfo">
+    insert into PROD_INFO (PROD_ID, PROD_CNAME, PROD_TITLE, 
+      DATE_CREATE, INST_RELATE, PROD_STAT, 
+      PROD_DESC, PROD_TEMPLATE, PROD_VIEW_XML, 
+      PROD_CTRL_PUB_XML, PROD_CTRL_SPEC_XML, PROD_TYPE
+      )
+    values (#{prodId,jdbcType=VARCHAR}, #{prodCname,jdbcType=VARCHAR}, #{prodTitle,jdbcType=VARCHAR}, 
+      #{dateCreate,jdbcType=VARCHAR}, #{instRelate,jdbcType=VARCHAR}, #{prodStat,jdbcType=VARCHAR}, 
+      #{prodDesc,jdbcType=VARCHAR}, #{prodTemplate,jdbcType=VARCHAR}, #{prodViewXml,jdbcType=VARCHAR}, 
+      #{prodCtrlPubXml,jdbcType=VARCHAR}, #{prodCtrlSpecXml,jdbcType=VARCHAR}, #{prodType,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <sql id="Base_Column_List">
+    PROD_ID, PROD_CNAME, PROD_TITLE, DATE_CREATE, INST_RELATE, PROD_STAT, PROD_DESC, PROD_TEMPLATE, PROD_VIEW_XML, PROD_CTRL_PUB_XML, PROD_CTRL_SPEC_XML, PROD_TYPE
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from PROD_INFO
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectValidProduct"  resultMap="BaseResultMap">
+    select PROD_ID, PROD_CNAME from PROD_INFO where PROD_STAT = '00' order by prod_id
+  </select>
+
+  <insert id="insertSelective" parameterType="com.smk.common.model.ProdInfo">
+    insert into PROD_INFO
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="prodId != null">
+        PROD_ID,
+      </if>
+      <if test="prodCname != null">
+        PROD_CNAME,
+      </if>
+      <if test="prodTitle != null">
+        PROD_TITLE,
+      </if>
+      <if test="dateCreate != null">
+        DATE_CREATE,
+      </if>
+      <if test="instRelate != null">
+        INST_RELATE,
+      </if>
+      <if test="prodStat != null">
+        PROD_STAT,
+      </if>
+      <if test="prodDesc != null">
+        PROD_DESC,
+      </if>
+      <if test="prodTemplate != null">
+        PROD_TEMPLATE,
+      </if>
+      <if test="prodViewXml != null">
+        PROD_VIEW_XML,
+      </if>
+      <if test="prodCtrlPubXml != null">
+        PROD_CTRL_PUB_XML,
+      </if>
+      <if test="prodCtrlSpecXml != null">
+        PROD_CTRL_SPEC_XML,
+      </if>
+      <if test="prodType != null">
+        PROD_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="prodId != null">
+        #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="prodCname != null">
+        #{prodCname,jdbcType=VARCHAR},
+      </if>
+      <if test="prodTitle != null">
+        #{prodTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="dateCreate != null">
+        #{dateCreate,jdbcType=VARCHAR},
+      </if>
+      <if test="instRelate != null">
+        #{instRelate,jdbcType=VARCHAR},
+      </if>
+      <if test="prodStat != null">
+        #{prodStat,jdbcType=VARCHAR},
+      </if>
+      <if test="prodDesc != null">
+        #{prodDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="prodTemplate != null">
+        #{prodTemplate,jdbcType=VARCHAR},
+      </if>
+      <if test="prodViewXml != null">
+        #{prodViewXml,jdbcType=VARCHAR},
+      </if>
+      <if test="prodCtrlPubXml != null">
+        #{prodCtrlPubXml,jdbcType=VARCHAR},
+      </if>
+      <if test="prodCtrlSpecXml != null">
+        #{prodCtrlSpecXml,jdbcType=VARCHAR},
+      </if>
+      <if test="prodType != null">
+        #{prodType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

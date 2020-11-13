@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smk.common.dao.BankCreditStatusMapper">
+  <resultMap id="BaseResultMap" type="com.smk.common.model.BankCreditStatus">
+    
+    <!-- 主键 -->
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    
+    <!-- 产品编号 -->
+    <result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+    
+    <!-- 身份证号 -->
+    <result column="ID_NUMBER" jdbcType="VARCHAR" property="idNumber" />
+    
+    <!-- 授信状态 0 已拒绝，1 已通过 -->
+    <result column="CREDIT_STS" jdbcType="CHAR" property="creditSts" />
+    
+    <!-- 授信金额 -->
+    <result column="CREDIT_AMT" jdbcType="DECIMAL" property="creditAmt" />
+    
+    <!-- 授信时间 -->
+    <result column="CREDIT_DATE" jdbcType="CHAR" property="creditDate" />
+    
+    <!-- 授信利率（单位为年利率%） 例如：利率为2%，则存放2 -->
+    <result column="CREDIT_RATE" jdbcType="DECIMAL" property="creditRate" />
+    
+    <!-- 创建时间 -->
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, PROD_ID, ID_NUMBER, CREDIT_STS, CREDIT_AMT, CREDIT_DATE, CREDIT_RATE, CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from BANK_CREDIT_STATUS
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from BANK_CREDIT_STATUS
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <delete id="deleteByProId" parameterType="java.lang.String">
+    delete from BANK_CREDIT_STATUS
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert">
+    insert into BANK_CREDIT_STATUS (ID, PROD_ID, ID_NUMBER, 
+      CREDIT_STS, CREDIT_AMT, CREDIT_DATE, 
+      CREDIT_RATE, CREATE_TIME)
+    values (#{id,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{idNumber,jdbcType=VARCHAR}, 
+      #{creditSts,jdbcType=CHAR}, #{creditAmt,jdbcType=DECIMAL}, #{creditDate,jdbcType=CHAR}, 
+      #{creditRate,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective">
+    insert into BANK_CREDIT_STATUS
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="prodId != null">
+        PROD_ID,
+      </if>
+      <if test="idNumber != null">
+        ID_NUMBER,
+      </if>
+      <if test="creditSts != null">
+        CREDIT_STS,
+      </if>
+      <if test="creditAmt != null">
+        CREDIT_AMT,
+      </if>
+      <if test="creditDate != null">
+        CREDIT_DATE,
+      </if>
+      <if test="creditRate != null">
+        CREDIT_RATE,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="prodId != null">
+        #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="idNumber != null">
+        #{idNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="creditSts != null">
+        #{creditSts,jdbcType=CHAR},
+      </if>
+      <if test="creditAmt != null">
+        #{creditAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="creditDate != null">
+        #{creditDate,jdbcType=CHAR},
+      </if>
+      <if test="creditRate != null">
+        #{creditRate,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update BANK_CREDIT_STATUS
+    <set>
+      <if test="prodId != null">
+        PROD_ID = #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="idNumber != null">
+        ID_NUMBER = #{idNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="creditSts != null">
+        CREDIT_STS = #{creditSts,jdbcType=CHAR},
+      </if>
+      <if test="creditAmt != null">
+        CREDIT_AMT = #{creditAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="creditDate != null">
+        CREDIT_DATE = #{creditDate,jdbcType=CHAR},
+      </if>
+      <if test="creditRate != null">
+        CREDIT_RATE = #{creditRate,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey">
+    update BANK_CREDIT_STATUS
+    set PROD_ID = #{prodId,jdbcType=VARCHAR},
+      ID_NUMBER = #{idNumber,jdbcType=VARCHAR},
+      CREDIT_STS = #{creditSts,jdbcType=CHAR},
+      CREDIT_AMT = #{creditAmt,jdbcType=DECIMAL},
+      CREDIT_DATE = #{creditDate,jdbcType=CHAR},
+      CREDIT_RATE = #{creditRate,jdbcType=DECIMAL},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <insert id="batchInsert" parameterType="java.util.List">
+    insert into BANK_CREDIT_STATUS (
+    ID,
+    PROD_ID,
+    ID_NUMBER,
+    CREDIT_STS,
+    CREDIT_AMT,
+    CREDIT_DATE,
+    CREDIT_RATE,
+    CREATE_TIME
+    )
+    (
+    <foreach collection="recordList" index="index" item="item" separator="union all">
+      (
+      select
+      #{item.id,jdbcType=VARCHAR},
+      #{item.prodId,jdbcType=VARCHAR},
+      #{item.idNumber,jdbcType=VARCHAR},
+      #{item.creditSts,jdbcType=CHAR},
+      #{item.creditAmt,jdbcType=DECIMAL},
+      #{item.creditDate,jdbcType=CHAR},
+      #{item.creditRate,jdbcType=DECIMAL},
+      #{item.createTime,jdbcType=TIMESTAMP}
+      from dual
+      )
+    </foreach>
+    )
+  </insert>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-03-26 11:04:10 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  
+</mapper>

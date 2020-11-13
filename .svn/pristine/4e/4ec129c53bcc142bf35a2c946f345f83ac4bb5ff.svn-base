@@ -1,0 +1,83 @@
+package com.smk.ebank.netty.server;
+
+import com.alibaba.fastjson.JSON;
+import com.smk.common.netty.constant.MsgType;
+import com.smk.common.netty.message.HeartbeatResponsePacket;
+import com.smk.common.netty.message.RequestMsgPacket;
+import com.smk.common.netty.message.ResponseMsgPacket;
+import com.smk.common.util.JsonUtil;
+import com.smk.common.util.SpringContextUtil;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+
+import java.lang.reflect.Method;
+
+/**
+ * @author pjmike
+ * @create 2018-10-24 15:43
+ */
+@Slf4j
+public class NettyServerHandler extends SimpleChannelInboundHandler<RequestMsgPacket> {
+
+    // 心跳丢失计数器
+    private int counter;
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, RequestMsgPacket packet) throws Exception {
+        if (packet.getMsgType().equals(MsgType.PING)) {
+            log.info("收到客户端发来的心跳消息：{}", JsonUtil.object2Json(packet));
+            //回应pong
+            ctx.writeAndFlush(new HeartbeatResponsePacket(packet));
+        } else {
+// methodArguments该参数使用Gson会报stackoverflowError
+//           log.info("收到客户端的业务消息：{}", JsonUtil.object2Json(packet));
+            log.info("收到客户端的业务消息：{}", JSON.toJSONString(packet));
+            ResponseMsgPacket response = new ResponseMsgPacket(packet);
+            try {
+                String interfaceName = packet.getInterfaceName();
+                String methodName = packet.getMethodName();
+                Class[] argClass = packet.getMethodArgumentClzSignatures();
+                Object[] args = packet.getMethodArguments();
+
+                String beanName = StringUtils.uncapitalize(interfaceName.substring(interfaceName.lastIndexOf(".") + 1));
+                Object bean = SpringContextUtil.getBean(beanName);
+                Method method = bean.getClass().getMethod(methodName, argClass);
+                Object result = method.invoke(bean, args);
+                response.setErrorCode(200L);
+                response.setMessage("Success");
+                response.setPayload(result);
+            } catch (Exception e) {
+                log.error("解析处理 netty 客户端参数出错", e);
+                response.setErrorCode(500L);
+                response.setMessage(e.getMessage());
+            }
+            //客户端关闭后，服务端要 addListener(ChannelFutureListener.CLOSE)
+            ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
+        }
+
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        if (evt instanceof IdleStateEvent) {
+            IdleState state = ((IdleStateEvent) evt).state();
+            if (state == IdleState.READER_IDLE) {
+
+                // 空闲6s之后触发 (心跳包丢失)
+                if (counter >= 3) {
+                    // 连续丢失3个心跳包 (断开连接)
+                    ctx.channel().close().sync();
+                    System.out.println("已与Client断开连接");
+                } else {
+                    counter++;
+                    System.out.println("丢失了第 " + counter + " 个心跳包");
+                }
+            }
+        }
+    }
+}

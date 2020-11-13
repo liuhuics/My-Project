@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smk.common.dao.BankLoanListMapper">
+  <resultMap id="BaseResultMap" type="com.smk.common.model.BankLoanList">
+    
+    <!-- 主键 -->
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    
+    <!-- 产品编号 -->
+    <result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+    
+    <!-- 身份证号 -->
+    <result column="ID_NUMBER" jdbcType="VARCHAR" property="idNumber" />
+    
+    <!-- 对账日期 -->
+    <result column="RECONCILIATION_DATE" jdbcType="CHAR" property="reconciliationDate" />
+    
+    <!-- 借据编号 -->
+    <result column="DEBIT_NO" jdbcType="VARCHAR" property="debitNo" />
+    
+    <!-- 放款时间 -->
+    <result column="LOAD_DATE" jdbcType="CHAR" property="loadDate" />
+    
+    <!-- 合同到期时间(该笔借据的结束时间) -->
+    <result column="CONTRACT_EXPIRY_DATE" jdbcType="CHAR" property="contractExpiryDate" />
+    
+    <!-- 借款总金额 -->
+    <result column="LOAN_TOTAL_AMT" jdbcType="DECIMAL" property="loanTotalAmt" />
+    
+    <!-- 还款日 -->
+    <result column="REPAY_DAY" jdbcType="DECIMAL" property="repayDay" />
+    
+    <!-- 分期期数 -->
+    <result column="PERIODS" jdbcType="DECIMAL" property="periods" />
+    
+    <!-- 借据状态 -->
+    <result column="DEBIT_STS" jdbcType="CHAR" property="debitSts" />
+    
+    <!-- 在贷余额 -->
+    <result column="REMAIN_LOAN_AMT" jdbcType="DECIMAL" property="remainLoanAmt" />
+    
+    <!-- 创建时间 -->
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, PROD_ID, ID_NUMBER, RECONCILIATION_DATE, DEBIT_NO, LOAD_DATE, CONTRACT_EXPIRY_DATE, 
+    LOAN_TOTAL_AMT, REPAY_DAY, PERIODS, DEBIT_STS, REMAIN_LOAN_AMT, CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from BANK_LOAN_LIST
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from BANK_LOAN_LIST
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <delete id="deleteByProId" parameterType="java.lang.String">
+    delete from BANK_LOAN_LIST
+    where PROD_ID = #{prodId,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert">
+    insert into BANK_LOAN_LIST (ID, PROD_ID, ID_NUMBER, 
+      RECONCILIATION_DATE, DEBIT_NO, LOAD_DATE, 
+      CONTRACT_EXPIRY_DATE, LOAN_TOTAL_AMT, REPAY_DAY, 
+      PERIODS, DEBIT_STS, REMAIN_LOAN_AMT, 
+      CREATE_TIME)
+    values (#{id,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{idNumber,jdbcType=VARCHAR}, 
+      #{reconciliationDate,jdbcType=CHAR}, #{debitNo,jdbcType=VARCHAR}, #{loadDate,jdbcType=CHAR}, 
+      #{contractExpiryDate,jdbcType=CHAR}, #{loanTotalAmt,jdbcType=DECIMAL}, #{repayDay,jdbcType=DECIMAL}, 
+      #{periods,jdbcType=DECIMAL}, #{debitSts,jdbcType=CHAR}, #{remainLoanAmt,jdbcType=DECIMAL}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective">
+    insert into BANK_LOAN_LIST
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="prodId != null">
+        PROD_ID,
+      </if>
+      <if test="idNumber != null">
+        ID_NUMBER,
+      </if>
+      <if test="reconciliationDate != null">
+        RECONCILIATION_DATE,
+      </if>
+      <if test="debitNo != null">
+        DEBIT_NO,
+      </if>
+      <if test="loadDate != null">
+        LOAD_DATE,
+      </if>
+      <if test="contractExpiryDate != null">
+        CONTRACT_EXPIRY_DATE,
+      </if>
+      <if test="loanTotalAmt != null">
+        LOAN_TOTAL_AMT,
+      </if>
+      <if test="repayDay != null">
+        REPAY_DAY,
+      </if>
+      <if test="periods != null">
+        PERIODS,
+      </if>
+      <if test="debitSts != null">
+        DEBIT_STS,
+      </if>
+      <if test="remainLoanAmt != null">
+        REMAIN_LOAN_AMT,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="prodId != null">
+        #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="idNumber != null">
+        #{idNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="reconciliationDate != null">
+        #{reconciliationDate,jdbcType=CHAR},
+      </if>
+      <if test="debitNo != null">
+        #{debitNo,jdbcType=VARCHAR},
+      </if>
+      <if test="loadDate != null">
+        #{loadDate,jdbcType=CHAR},
+      </if>
+      <if test="contractExpiryDate != null">
+        #{contractExpiryDate,jdbcType=CHAR},
+      </if>
+      <if test="loanTotalAmt != null">
+        #{loanTotalAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="repayDay != null">
+        #{repayDay,jdbcType=DECIMAL},
+      </if>
+      <if test="periods != null">
+        #{periods,jdbcType=DECIMAL},
+      </if>
+      <if test="debitSts != null">
+        #{debitSts,jdbcType=CHAR},
+      </if>
+      <if test="remainLoanAmt != null">
+        #{remainLoanAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update BANK_LOAN_LIST
+    <set>
+      <if test="prodId != null">
+        PROD_ID = #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="idNumber != null">
+        ID_NUMBER = #{idNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="reconciliationDate != null">
+        RECONCILIATION_DATE = #{reconciliationDate,jdbcType=CHAR},
+      </if>
+      <if test="debitNo != null">
+        DEBIT_NO = #{debitNo,jdbcType=VARCHAR},
+      </if>
+      <if test="loadDate != null">
+        LOAD_DATE = #{loadDate,jdbcType=CHAR},
+      </if>
+      <if test="contractExpiryDate != null">
+        CONTRACT_EXPIRY_DATE = #{contractExpiryDate,jdbcType=CHAR},
+      </if>
+      <if test="loanTotalAmt != null">
+        LOAN_TOTAL_AMT = #{loanTotalAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="repayDay != null">
+        REPAY_DAY = #{repayDay,jdbcType=DECIMAL},
+      </if>
+      <if test="periods != null">
+        PERIODS = #{periods,jdbcType=DECIMAL},
+      </if>
+      <if test="debitSts != null">
+        DEBIT_STS = #{debitSts,jdbcType=CHAR},
+      </if>
+      <if test="remainLoanAmt != null">
+        REMAIN_LOAN_AMT = #{remainLoanAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey">
+    update BANK_LOAN_LIST
+    set PROD_ID = #{prodId,jdbcType=VARCHAR},
+      ID_NUMBER = #{idNumber,jdbcType=VARCHAR},
+      RECONCILIATION_DATE = #{reconciliationDate,jdbcType=CHAR},
+      DEBIT_NO = #{debitNo,jdbcType=VARCHAR},
+      LOAD_DATE = #{loadDate,jdbcType=CHAR},
+      CONTRACT_EXPIRY_DATE = #{contractExpiryDate,jdbcType=CHAR},
+      LOAN_TOTAL_AMT = #{loanTotalAmt,jdbcType=DECIMAL},
+      REPAY_DAY = #{repayDay,jdbcType=DECIMAL},
+      PERIODS = #{periods,jdbcType=DECIMAL},
+      DEBIT_STS = #{debitSts,jdbcType=CHAR},
+      REMAIN_LOAN_AMT = #{remainLoanAmt,jdbcType=DECIMAL},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <insert id="batchInsert" parameterType="java.util.List">
+    insert into BANK_LOAN_LIST (
+    ID,
+    PROD_ID,
+    ID_NUMBER,
+    RECONCILIATION_DATE,
+    DEBIT_NO,
+    LOAD_DATE,
+    CONTRACT_EXPIRY_DATE,
+    LOAN_TOTAL_AMT,
+    REPAY_DAY,
+    PERIODS,
+    DEBIT_STS,
+    REMAIN_LOAN_AMT,
+    CREATE_TIME
+    )
+    (
+    <foreach collection="recordList" index="index" item="item" separator="union all">
+      (
+      select
+      #{item.id,jdbcType=VARCHAR},
+      #{item.prodId,jdbcType=VARCHAR},
+      #{item.idNumber,jdbcType=VARCHAR},
+      #{item.reconciliationDate,jdbcType=CHAR},
+      #{item.debitNo,jdbcType=VARCHAR},
+      #{item.loadDate,jdbcType=CHAR},
+      #{item.contractExpiryDate,jdbcType=CHAR},
+      #{item.loanTotalAmt,jdbcType=DECIMAL},
+      #{item.repayDay,jdbcType=DECIMAL},
+      #{item.periods,jdbcType=DECIMAL},
+      #{item.debitSts,jdbcType=CHAR},
+      #{item.remainLoanAmt,jdbcType=DECIMAL},
+      #{item.createTime,jdbcType=TIMESTAMP}
+      from dual
+      )
+    </foreach>
+    )
+  </insert>
+  
+  <!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: 2020-03-26 14:17:50 ### -->
+
+
+
+  <!-- Your codes goes here!!! -->
+  
+</mapper>

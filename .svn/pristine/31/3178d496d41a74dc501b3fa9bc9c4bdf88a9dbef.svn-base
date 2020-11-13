@@ -1,0 +1,2 @@
+log.dir=/home/logs/business
+log.level=info

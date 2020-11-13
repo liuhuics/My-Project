@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+ <generatorConfiguration>
+     <!-- 数据库驱动包位置 -->
+     <!--<classPathEntry location="C:\Users\zhengjuan\.m2\repository\com\oracle\ojdbc8\12.2.0.1\ojdbc8-12.2.0.1.jar" />-->
+     <context id="DB2Tables" targetRuntime="MyBatis3">
+
+         <!--序列化,生成的实体类会自动实现Serializable接口-->
+         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+
+         <!--参见https://github.com/ithuhui/hui-mybatis-generator-plugins-->
+         <plugin type="com.smk.plugin.batchInsert.OracleBatchInsertPlugin"/>
+
+         <!-- lombok 插件 -->
+         <plugin type="com.smk.plugin.LombokPlugin" >
+             <property name="hasLombok" value="true"/>
+         </plugin>
+         <!-- 数据库信息插件 -->
+         <plugin type="com.smk.plugin.CommentPlugin">
+             <!-- 抑制警告 -->
+             <property name="suppressTypeWarnings" value="true" />
+             <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+             <property name="suppressAllComments" value="false" />
+             <!-- 是否生成注释代时间戳-->
+             <property name="suppressDate" value="false" />
+         </plugin>
+
+
+         <!-- 为生成的Java模型创建一个toString方法 -->
+         <!--<plugin type="org.mybatis.generator.plugins.ToStringPlugin"></plugin>-->
+
+
+         <commentGenerator>
+             <property name="suppressDate" value="true"/>
+             <property name="suppressAllComments" value="true"/>
+         </commentGenerator>
+
+         <!-- 数据库链接URL、用户名、密码 -->
+         <!--connectionURL="jdbc:oracle:thin:@192.168.23.52:1521/csdb" userId="txhmls"-->
+
+         <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+                         connectionURL="jdbc:oracle:thin:@127.0.0.1:1521/orcl" userId="scott"
+                         password="java">
+             <!-- 针对oracle数据库 -->
+             <property name="remarksReporting" value="true"></property>
+         </jdbcConnection>
+
+         <javaTypeResolver>
+             <property name="forceBigDecimals" value="false" />
+         </javaTypeResolver>
+
+         <!--&lt;!&ndash; 生成实体类的包名和位置 &ndash;&gt;-->
+         <javaModelGenerator targetPackage="com.smk.common.model" targetProject="src/main/java">
+             <property name="enableSubPackages" value="false" />
+            <property name="trimStrings" value="true" />
+         </javaModelGenerator>
+
+         <!--&lt;!&ndash; 生成的SQL映射文件包名和位置 &ndash;&gt;-->
+         <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
+             <property name="enableSubPackages" value="true" />
+         </sqlMapGenerator>
+
+         <!-- 生成DAO的包名和位置 -->
+         <javaClientGenerator type="XMLMAPPER" targetPackage="com.smk.common.dao" targetProject="src/main/java">
+             <property name="enableSubPackages" value="true" />
+         </javaClientGenerator>
+
+         <!-- 要生成哪些表(更改tableName和domainObjectName就可以)-->
+
+         <table tableName="SYS_PERMISSION" enableCountByExample="false" enableUpdateByExample="false"
+                enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" >
+         </table>
+         <!--<table tableName="SYS_ROLE_PERMIT" enableCountByExample="false" enableUpdateByExample="false"-->
+                <!--enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" >-->
+         <!--</table>-->
+     </context>
+</generatorConfiguration>

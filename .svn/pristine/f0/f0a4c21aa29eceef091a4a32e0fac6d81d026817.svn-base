@@ -1,0 +1,2 @@
+log.dir=/home/logs/schedule
+log.level=info

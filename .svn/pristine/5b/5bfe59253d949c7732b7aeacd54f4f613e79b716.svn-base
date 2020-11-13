@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout :: htmlhead" th:with="title='后台管理'">
+
+<body>
+
+
+<!-- 正文开始 -->
+<div class="error-page">
+    <img class="error-page-img" src="images/404.svg">
+    <div class="error-page-info">
+        <h1>404</h1>
+        <div class="error-page-info-desc">啊哦，你访问的页面不存在(⋟﹏⋞)</div>
+        <div>
+            <a href="/login" class="layui-btn">返回登录页</a>
+        </div>
+    </div>
+</div>
+
+<!-- js部分 -->
+@/* 加入contextPath属性和session超时的配置 */
+<script type="text/javascript">
+    var Feng = {
+        ctxPath: "",
+        addCtx: function (ctx) {
+            if (this.ctxPath === "") {
+                this.ctxPath = ctx;
+            }
+        }
+    };
+    Feng.addCtx("${ctxPath}");
+</script>
+
+
+</body>
+
+</html>
