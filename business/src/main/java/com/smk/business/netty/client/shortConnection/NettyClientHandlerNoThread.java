@@ -94,7 +94,6 @@ public class NettyClientHandlerNoThread extends SimpleChannelInboundHandler<Resp
             return response;
         } finally {
             group.shutdownGracefully().sync();
-            ;
         }
     }
 
