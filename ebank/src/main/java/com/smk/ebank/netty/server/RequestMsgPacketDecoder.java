@@ -24,6 +24,7 @@ import java.util.Map;
  * Copyright (c) 2020, 96225.com.cn All Rights Reserved.
  */
 public class RequestMsgPacketDecoder extends ByteToMessageDecoder {
+    //ByteBuf不需要调用flip()来切换读写
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf in, List<Object> list) throws Exception {
         int length = in.readableBytes();

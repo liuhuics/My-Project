@@ -61,15 +61,17 @@ public class NettyServer implements ApplicationContextAware {
                     //使用指定的端口设置套接字地址
                     .localAddress(new InetSocketAddress(port))
 
-                    //服务端可连接队列数,对应TCP/IP协议listen函数中backlog参数
+                    //服务端接收连接的队列长度,对应TCP/IP协议listen函数中backlog参数。如果队列已满，客户端连接将被拒绝。
+                    // windwos中默认是200，其他操作系统则为128
                     .option(ChannelOption.SO_BACKLOG, 1024)
 
-                    //设置TCP长连接,一般如果两个小时内没有数据的通信时,TCP会自动发送一个活动探测数据报文
+                    //设置TCP长连接,即开启tcp底层心跳机制。
+                    // 默认的心跳间隔是两个小时，即如果两个小时内没有数据的通信时,TCP会自动发送一个活动探测数据报文，
                     .childOption(ChannelOption.SO_KEEPALIVE, true)
 
-                    //将小的数据包包装成更大的帧进行传送，提高网络的负载
+                    //该参数的含义是是否将小的数据包包装成更大的帧进行传送，true表示不要，即有数据时就发立刻送，也是netty默认值。
                     .childOption(ChannelOption.TCP_NODELAY, true)
-
+                    //设置子通道流水线
                     .childHandler(new ChannelInitializer<Channel>() {
                         protected void initChannel(Channel ch) throws Exception {
                             ch.pipeline()
@@ -87,11 +89,11 @@ public class NettyServer implements ApplicationContextAware {
             if (future.isSuccess()) {
                 log.info("启动 Netty Server");
             }
-            future.channel().closeFuture().sync();//获取Channel的CloseFuture,并阻塞当前线程直到它完成
+            future.channel().closeFuture().sync();//获取Channel的CloseFuture,并阻塞当前线程直到通道完成
 
         } catch (Exception e) {
-            boss.shutdownGracefully().sync();
             work.shutdownGracefully().sync();
+            boss.shutdownGracefully().sync();
             log.info("关闭Netty");
         }
 
