@@ -82,6 +82,7 @@ public class NettyServer implements ApplicationContextAware {
 
                         }
                     });
+            //通过sync()同步方法阻塞直到绑定成功
             ChannelFuture future = bootstrap.bind().sync();
             if (future.isSuccess()) {
                 log.info("启动 Netty Server");

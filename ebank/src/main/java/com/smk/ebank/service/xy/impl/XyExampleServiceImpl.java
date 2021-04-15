@@ -3,9 +3,8 @@ package com.smk.ebank.service.xy.impl;
 import com.smk.api.xy.XyExampleService;
 import com.smk.common.util.JsonUtil;
 import com.smk.common.vo.BaseResult;
-import com.smk.common.vo.BaseResultBuilder;
+import com.smk.common.vo.netty.XyResult;
 import com.smk.ebank.netty.config.RpcService;
-import org.springframework.stereotype.Component;
 
 /**
  * @Description:
@@ -35,13 +34,17 @@ public class XyExampleServiceImpl implements XyExampleService {
 
 
     @Override
-    public BaseResult sayHelloWithReturnObject(String name) {
-        return BaseResultBuilder.buildBadRequestResult("object hello " + name);
+    public XyResult sayHelloWithReturnObject(String name) {
+        XyResult xyResult = new XyResult();
+        xyResult.setObj("object hello " + name);
+        return xyResult;
     }
 
     @Override
-    public BaseResult sayHelloWithObject(BaseResult baseResult) {
-        return BaseResultBuilder.buildBadRequestResult("object hello " + JsonUtil.object2Json(baseResult));
+    public XyResult sayHelloWithObject(BaseResult baseResult) {
+        XyResult xyResult = new XyResult();
+        xyResult.setObj("object hello " + JsonUtil.object2Json(baseResult));
+        return xyResult;
     }
 
     @Override

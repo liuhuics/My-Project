@@ -1,6 +1,7 @@
 package com.smk.api.xy;
 
 import com.smk.common.vo.BaseResult;
+import com.smk.common.vo.netty.XyResult;
 
 /**
  * @Description:
@@ -19,9 +20,9 @@ public interface XyExampleService {
 
     int sayHelloInt(int name);
 
-    BaseResult sayHelloWithReturnObject(String name);
+    XyResult sayHelloWithReturnObject(String name);
 
-    BaseResult sayHelloWithObject(BaseResult baseResult);
+    XyResult sayHelloWithObject(BaseResult baseResult);
 
     void sayHelloWithException(String name);
 
