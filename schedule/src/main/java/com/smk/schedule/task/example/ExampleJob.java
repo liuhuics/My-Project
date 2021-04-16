@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @version: 1.0
  * @since:   JDK 1.8
  * @Date:    2019/10/15 16:46
- * Copyright (c) , 96225.com.cn All Rights Reserved.
+ * Copyright (c) , .
  */
 /*@ElasticSimpleJob(cron = "0 * * * * ?")
 @Component*/

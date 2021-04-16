@@ -7,7 +7,7 @@ package com.smk.schedule.constant;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 202003013 17:00:00
- * Copyright (c) 2020, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2020
  */
 public class ScheduleTaskConstant {
     /**

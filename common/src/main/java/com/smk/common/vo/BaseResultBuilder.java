@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/11/26 10:25
- * Copyright (c) 2019, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2019
  */
 public class BaseResultBuilder {
 

@@ -14,12 +14,12 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * @Description: Netty服务处理类
+ * @Description: Netty服务处理类，用于短连接
  * @author: liuhui
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2020/9/1 16:34
- * Copyright (c) , 96225.com.cn All Rights Reserved.
+ * Copyright (c) , .
  */
 @Slf4j
 @ChannelHandler.Sharable

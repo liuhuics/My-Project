@@ -12,7 +12,7 @@ import com.smk.common.util.SerialNumberUtils;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2020/8/25 13:51
- * Copyright (c) 2020, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2020
  */
 public class HeartbeatRequestPacket extends  BaseMsgPacket{
 

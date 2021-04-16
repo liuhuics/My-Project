@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/11/28 10:58
- * Copyright (c) , 96225.com.cn All Rights Reserved.
+ * Copyright (c) , .
  */
 @RestController
 @RequestMapping("/dynamicJob")

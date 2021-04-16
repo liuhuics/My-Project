@@ -1,6 +1,5 @@
 package com.smk.business.netty.client.shortConnection;
 
-import com.smk.business.netty.client.shortConnection.NettyClientHandler;
 import com.smk.common.exception.BizException;
 import com.smk.common.netty.constant.MsgType;
 import com.smk.common.netty.constant.NettyConstant;
@@ -17,13 +16,13 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @Description:
+ * @Description: 动态代理类，用于短连接
  * @Project: finance-parent
  * @author: liuhui
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2020/8/31 17:52
- * Copyright (c) 2020, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2020
  */
 @Component
 @Slf4j

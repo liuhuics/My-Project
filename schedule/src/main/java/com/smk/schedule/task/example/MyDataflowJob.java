@@ -16,7 +16,7 @@ import java.util.List;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/10/15 16:47
- * Copyright (c) , 96225.com.cn All Rights Reserved.
+ * Copyright (c) , .
  */
 //@ElasticDataflowJob(cron="0 * * * * ?",shardingTotalCount = 3,shardingItemParameters = "0=Beijing,1=Shanghai,2=Guangzhou")
 //@Component

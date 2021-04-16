@@ -6,7 +6,7 @@ package com.smk.common.constant;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/11/20 11:34
- * Copyright (c) , 96225.com.cn All Rights Reserved.
+ * Copyright (c) , .
  */
 public enum BizLogSuffix {
 

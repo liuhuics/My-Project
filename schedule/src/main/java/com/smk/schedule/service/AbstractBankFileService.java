@@ -27,7 +27,7 @@ import java.util.*;
  * @version: 1.0
  * @since: JDK 1.7
  * @Date: 20200324 17:00:00
- * Copyright (c) 2020, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2020
  */
 @Slf4j
 public abstract class AbstractBankFileService extends SFTPService {

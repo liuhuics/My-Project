@@ -15,7 +15,7 @@ import java.util.List;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2020/4/9 14:50
- * Copyright (c) 2020, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2020
  */
 @Setter
 @Getter

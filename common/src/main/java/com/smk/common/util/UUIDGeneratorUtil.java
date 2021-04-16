@@ -12,7 +12,7 @@ import java.util.UUID;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 20200303 12:00:00
- * Copyright (c) 2020, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2020
  */
 public class UUIDGeneratorUtil {
 

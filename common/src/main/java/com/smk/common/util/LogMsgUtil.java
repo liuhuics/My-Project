@@ -20,7 +20,7 @@ import java.util.Map;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/11/8 11:01
- * Copyright (c) , 96225.com.cn All Rights Reserved.
+ * Copyright (c) , .
  */
 public class LogMsgUtil {
 

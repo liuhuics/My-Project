@@ -12,7 +12,7 @@ import lombok.Setter;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/11/13 10:53
- * Copyright (c) 2019, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2019
  */
 @Setter
 @Getter

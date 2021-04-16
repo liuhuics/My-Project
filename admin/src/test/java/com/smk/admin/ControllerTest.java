@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/12/9 17:44
- * Copyright (c) 2019, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2019
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class,

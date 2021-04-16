@@ -16,7 +16,7 @@ import java.math.BigDecimal;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/11/25 17:13
- * Copyright (c) 2019, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2019
  */
 @Component
 public class ExampleExcelDataReader extends ExcelReadService {

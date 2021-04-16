@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/10/15 16:43
- * Copyright (c) 2019, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2019
  */
 public class CommonUtil {
 

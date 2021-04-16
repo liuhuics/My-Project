@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2020/3/4 14:36
- * Copyright (c) 2020, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2020
  */
 @Configuration
 @ConditionalOnProperty(name = "ssl", havingValue = "true")

@@ -20,7 +20,7 @@ import java.util.Vector;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2020/3/23 14:46
- * Copyright (c) 2020, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2020
  */
 @Slf4j
 public abstract class SFTPService {

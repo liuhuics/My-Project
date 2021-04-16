@@ -17,13 +17,13 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.Callable;
 
 /**
- * @Description: netty客户端处理类
+ * @Description: netty客户端处理类，用于短连接
  * @Project: finance-parent
  * @author: liuhui
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2020/8/27 10:41
- * Copyright (c) 2020, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2020
  */
 @Slf4j
 public class NettyClientHandler extends SimpleChannelInboundHandler<ResponseMsgPacket> implements Callable<ResponseMsgPacket> {

@@ -2,8 +2,7 @@ package com.smk.business.netty.client.longConnection;
 
 import com.smk.common.netty.message.RequestMsgPacket;
 import com.smk.common.netty.message.ResponseMsgPacket;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -13,8 +12,8 @@ import java.util.concurrent.locks.AbstractQueuedSynchronizer;
  * RPCFuture for async RPC call
  * Created by luxiaoxun on 2016-03-15.
  */
+@Slf4j
 public class RpcFuture implements Future<Object> {
-    private static final Logger logger = LoggerFactory.getLogger(RpcFuture.class);
 
     private Sync sync;
     private RequestMsgPacket request;
@@ -53,8 +52,8 @@ public class RpcFuture implements Future<Object> {
                 return null;
             }
         } else {
-            throw new RuntimeException("Timeout exception. Request id: " + this.request.getSerialNumber()
-                    + ". Request class name: " + this.request.getInterfaceName()
+            throw new RuntimeException("Timeout exception. Request serialNum: " + this.request.getSerialNumber()
+                    + ". Request interface name: " + this.request.getInterfaceName()
                     + ". Request method: " + this.request.getMethodName());
         }
     }
@@ -75,9 +74,10 @@ public class RpcFuture implements Future<Object> {
         // Threshold
         long responseTime = System.currentTimeMillis() - startTime;
         if (responseTime > this.responseTimeThreshold) {
-//            logger.warn("Service response time is too slow. Request id = " + reponse..getRequestId() + ". Response " +
-//                    "Time = " + responseTime + "ms")
-            ;
+            log.warn("Service response time is too slow. Request serialNum = " + reponse.getSerialNumber() + ". " +
+                    "Response " +
+                    "Time = " + responseTime + "ms");
+
         }
     }
 

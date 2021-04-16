@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @Description:
+ * @Description: netty rpc测试，用于长连接
  * @Project: finance-parent
  * @author: liuhui
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/12/31 12:10
- * Copyright (c) 2019, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2019
  */
 @RestController
 @Slf4j

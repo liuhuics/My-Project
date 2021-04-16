@@ -25,7 +25,7 @@ import java.util.Set;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2020/4/10 11:39
- * Copyright (c) , 96225.com.cn All Rights Reserved.
+ * Copyright (c) , .
  */
 @Slf4j
 public class ShiroRealm extends AuthorizingRealm {

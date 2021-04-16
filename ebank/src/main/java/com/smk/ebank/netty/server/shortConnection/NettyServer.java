@@ -22,12 +22,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @Description: Netty 服务
+ * @Description: Netty 服务，用于短连接
  * @author: liuhui
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2020/9/1 16:38
- * Copyright (c) , 96225.com.cn All Rights Reserved.
+ * Copyright (c) , .
  */
 //@Component
 @Slf4j

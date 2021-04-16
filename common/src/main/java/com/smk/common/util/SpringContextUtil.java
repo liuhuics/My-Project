@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/12/2 12:56
- * Copyright (c) 2019, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2019
  */
 @Component
 public class SpringContextUtil implements ApplicationContextAware {

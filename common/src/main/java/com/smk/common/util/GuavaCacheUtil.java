@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2020/4/10 15:29
- * Copyright (c) 2020, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2020
  */
 public class GuavaCacheUtil {
 

@@ -19,7 +19,7 @@ import java.util.Map;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2020/4/13 11:38
- * Copyright (c) 2020, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2020
  */
 @Slf4j
 @Service

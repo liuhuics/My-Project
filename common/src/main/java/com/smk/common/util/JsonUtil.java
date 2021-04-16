@@ -10,7 +10,7 @@ import com.google.gson.GsonBuilder;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/11/19 11:11
- * Copyright (c) 2019, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2019
  */
 public class JsonUtil {
 

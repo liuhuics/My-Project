@@ -25,7 +25,7 @@ import java.util.Map;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/11/28 10:39
- * Copyright (c) 2019, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2019
  */
 @Component
 @Slf4j

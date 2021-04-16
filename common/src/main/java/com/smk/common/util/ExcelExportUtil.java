@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/11/11 10:08
- * Copyright (c) 2019, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2019
  */
 @Slf4j
 public class ExcelExportUtil {

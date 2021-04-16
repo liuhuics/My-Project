@@ -7,7 +7,7 @@ package com.smk.plugin.batchInsert;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/11/19 17:52
- * Copyright (c) 2019, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2019
  */
 
 import org.mybatis.generator.api.IntrospectedTable;

@@ -9,7 +9,7 @@ import java.lang.annotation.*;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/12/13 16:46
- * Copyright (c) 2019, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2019
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited

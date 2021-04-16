@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/10/12 15:30
- * Copyright (c) 2019, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2019
  */
 @RestController
 @RequestMapping("/testRedis")

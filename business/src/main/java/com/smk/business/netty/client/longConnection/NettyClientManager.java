@@ -24,13 +24,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
- * @Description:
+ * @Description: 客户端处理器管理类
  * @Project: finance-parent
  * @author: liuhui
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2020/9/14 15:35
- * Copyright (c) 2020, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2020
  */
 @Component
 @Slf4j

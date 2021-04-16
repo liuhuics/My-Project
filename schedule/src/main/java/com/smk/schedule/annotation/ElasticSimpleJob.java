@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * @version: 1.0
  * @since:   JDK 1.8
  * @Date:    2019/10/15 16:50
- * Copyright (c) , 96225.com.cn All Rights Reserved.
+ * Copyright (c) , .
  */
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)

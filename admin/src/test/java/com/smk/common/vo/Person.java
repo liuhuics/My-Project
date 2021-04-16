@@ -14,7 +14,7 @@ import java.math.BigDecimal;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/11/11 14:15
- * Copyright (c) 2019, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2019
  */
 @Setter
 @Getter

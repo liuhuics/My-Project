@@ -21,7 +21,7 @@ import java.util.Map;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2020/8/26 10:39
- * Copyright (c) 2020, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2020
  */
 public class ResponseMsgPacketDecoder extends ByteToMessageDecoder {
     @Override

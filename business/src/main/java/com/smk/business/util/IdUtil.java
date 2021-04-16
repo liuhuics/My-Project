@@ -14,7 +14,7 @@ import org.redisson.api.RAtomicLong;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2020/3/9 11:35
- * Copyright (c) 2020, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2020
  */
 public class IdUtil {
 

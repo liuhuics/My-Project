@@ -30,7 +30,7 @@ import org.springframework.context.annotation.Configuration;
  * @version: 1.0
  * @since:   JDK 1.8
  * @Date:    2019/10/15 16:45
- * Copyright (c) , 96225.com.cn All Rights Reserved.
+ * Copyright (c) , .
  */
 @Configuration
 @ConditionalOnExpression("'${elaticjob.zookeeper.server-lists}'.length() > 0")

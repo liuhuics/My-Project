@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/11/8 10:51
- * Copyright (c) , 96225.com.cn All Rights Reserved.
+ * Copyright (c) , .
  */
 public class LogConstant {
 

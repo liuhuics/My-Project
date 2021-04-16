@@ -29,7 +29,7 @@ import java.util.List;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/11/11 17:26
- * Copyright (c) 2019, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2019
  */
 @Configuration
 public class RestTemplateConfig {

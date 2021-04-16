@@ -19,7 +19,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2019/10/15 15:26
- * Copyright (c) 2019, 96225.com.cn All Rights Reserved.
+ * Copyright (c) 2019
  */
 @Configuration
 public class RedisConfig {

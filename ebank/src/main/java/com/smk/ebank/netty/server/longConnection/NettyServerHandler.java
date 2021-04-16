@@ -16,12 +16,12 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * @Description: Netty服务处理类
+ * @Description: Netty服务处理类，用于长连接
  * @author: liuhui
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2020/9/1 16:34
- * Copyright (c) , 96225.com.cn All Rights Reserved.
+ * Copyright (c) , .
  */
 @Slf4j
 public class NettyServerHandler extends SimpleChannelInboundHandler<RequestMsgPacket> {
@@ -65,7 +65,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RequestMsgPa
             //客户端关闭后，服务端要 addListener(ChannelFutureListener.CLOSE)
             log.info("发送响应报文:{}", JSON.toJSONString(response));
 
-            //发完即关闭连接，短连接，或者通过 channelReadComplete 方法来添加关闭监听
+            //发完不关闭连接
             ctx.writeAndFlush(response);
 
         }
