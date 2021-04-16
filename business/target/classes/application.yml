@@ -70,7 +70,8 @@ ftp:
 #netty
 netty:
   server:
-    port: 9092
+    addresses: 127.0.0.1:9092
+
 
 
 

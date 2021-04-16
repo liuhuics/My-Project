@@ -1,9 +1,6 @@
 package com.smk.business.netty.client.longConnection;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @Description:
@@ -14,10 +11,8 @@ import lombok.Setter;
  * @Date: 2020/9/14 15:43
  * Copyright (c) 2020, 96225.com.cn All Rights Reserved.
  */
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class ServerAdress {
 
     private String host;

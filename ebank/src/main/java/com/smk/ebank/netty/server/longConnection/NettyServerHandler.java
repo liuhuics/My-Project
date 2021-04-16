@@ -6,17 +6,14 @@ import com.smk.common.netty.message.HeartbeatResponsePacket;
 import com.smk.common.netty.message.RequestMsgPacket;
 import com.smk.common.netty.message.ResponseMsgPacket;
 import com.smk.common.util.JsonUtil;
-import com.smk.common.util.SpringContextUtil;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * @Description: Netty服务处理类
@@ -29,10 +26,11 @@ import java.lang.reflect.Method;
 @Slf4j
 public class NettyServerHandler extends SimpleChannelInboundHandler<RequestMsgPacket> {
 
-    // 心跳丢失计数器
-    private int counter;
+    private Map<String, Object> serviceMap;
 
-
+    public NettyServerHandler(Map<String, Object> serviceMap) {
+        this.serviceMap = serviceMap;
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RequestMsgPacket packet) throws Exception {
@@ -51,8 +49,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RequestMsgPa
                 Class[] argClass = packet.getMethodArgumentClasses();
                 Object[] args = packet.getMethodArguments();
 
-                String beanName = StringUtils.uncapitalize(interfaceName.substring(interfaceName.lastIndexOf(".") + 1));
-                Object bean = SpringContextUtil.getBean(beanName);
+                Object bean = serviceMap.get(interfaceName);
                 Method method = bean.getClass().getMethod(methodName, argClass);
                 Object result = method.invoke(bean, args);
                 response.setErrorCode(200L);
@@ -69,34 +66,20 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RequestMsgPa
             log.info("发送响应报文:{}", JSON.toJSONString(response));
 
             //发完即关闭连接，短连接，或者通过 channelReadComplete 方法来添加关闭监听
-            ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
+            ctx.writeAndFlush(response);
 
         }
 
     }
 
-/*    @Override
-    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-        super.channelReadComplete(ctx);
-        ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
-    }*/
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
-            IdleState state = ((IdleStateEvent) evt).state();
-            if (state == IdleState.READER_IDLE) {
-
-                // 空闲6s之后触发 (心跳包丢失)
-                if (counter >= 3) {
-                    // 连续丢失3个心跳包 (断开连接)
-                    ctx.channel().close().sync();
-                    log.error("已与Client断开连接");
-                } else {
-                    counter++;
-                    log.info("丢失了第 " + counter + " 个心跳包");
-                }
-            }
+            ctx.channel().close();
+            log.warn("Channel idle in last {} seconds, close it", 60);
+        } else {
+            super.userEventTriggered(ctx, evt);
         }
     }
 }

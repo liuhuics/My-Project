@@ -4,14 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.smk.common.netty.message.HeartbeatRequestPacket;
 import com.smk.common.netty.message.RequestMsgPacket;
 import com.smk.common.netty.message.ResponseMsgPacket;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Description: netty客户端处理类
@@ -25,22 +26,17 @@ import java.util.concurrent.Callable;
 @Slf4j
 public class NettyClientHandler extends SimpleChannelInboundHandler<ResponseMsgPacket> implements Callable<ResponseMsgPacket> {
 
-    /*RPC响应对象*/
-    private ResponseMsgPacket response;
     /*RPC请求对象*/
     private RequestMsgPacket requestMsgPacket;
 
     private volatile Channel channel;
 
-    private final Object obj = new Object();
+    private ConcurrentHashMap<String, RpcFuture> pendingRPC = new ConcurrentHashMap<>();
 
-
-    private ServerAdress serverAdress;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-//        this.remotePeer = this.channel.remoteAddress();
     }
 
     @Override
@@ -56,10 +52,14 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ResponseMsgP
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, ResponseMsgPacket responseMsgPacket) throws Exception {
         log.info("接收到来自服务端的响应消息,消息内容:{}", JSON.toJSONString(responseMsgPacket));
-        this.response = responseMsgPacket;
-        synchronized (obj) {
-            //收到响应，唤醒线程
-            obj.notifyAll();
+        String requestSerialNum = responseMsgPacket.getSerialNumber();
+        log.debug("Receive response: " + requestSerialNum);
+        RpcFuture rpcFuture = pendingRPC.get(requestSerialNum);
+        if (rpcFuture != null) {
+            pendingRPC.remove(requestSerialNum);
+            rpcFuture.done(responseMsgPacket);
+        } else {
+            log.warn("Can not get pending response for request id: " + requestSerialNum);
         }
 
     }
@@ -74,36 +74,22 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ResponseMsgP
     }
 
 
-    public ResponseMsgPacket send(RequestMsgPacket request) throws Exception {
+    public RpcFuture send(RequestMsgPacket request) throws Exception {
         log.info("发送请求报文:{}", JSON.toJSONString(request));
-
-        EventLoopGroup group = new NioEventLoopGroup();
+        RpcFuture rpcFuture = new RpcFuture(request);
+        pendingRPC.put(request.getSerialNumber(), rpcFuture);
         try {
-            //创建并初始化Netty客户端bootstrap对象
-            Bootstrap bootstrap = new Bootstrap();
-            bootstrap.group(group)
-                    .channel(NioSocketChannel.class)
-                    .handler(new NettyClientInitializer())
-                    .option(ChannelOption.SO_KEEPALIVE, true);
-
-            //连接RPC服务器
-            ChannelFuture future = bootstrap.connect("", 9092).sync();
             //写入RPC请求数据
-            future.channel().writeAndFlush(request).sync();
+            ChannelFuture channelFuture = channel.writeAndFlush(request).sync();
 
-            synchronized (obj) {
-                //未收到响应，使线程继续等待
-                obj.wait();
+//            return channelFuture.get();
+            if (!channelFuture.isSuccess()) {
+                log.error("Send request {} error", request.getSerialNumber());
             }
-
-            if (null != response) {
-                //关闭RPC请求连接
-                future.channel().closeFuture().sync();//获取Channel的CloseFuture,并阻塞当前线程直到它完成
-            }
-            return response;
-        } finally {
-            group.shutdownGracefully();
+        } catch (InterruptedException e) {
+            log.error("Send request exception: " + e.getMessage());
         }
+        return rpcFuture;
     }
 
 
@@ -119,10 +105,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ResponseMsgP
 
     @Override
     public ResponseMsgPacket call() throws Exception {
-        return send(requestMsgPacket);
+        return (ResponseMsgPacket) send(requestMsgPacket).get();
     }
 
-    public void setServerAdress(ServerAdress serverAdress) {
-        this.serverAdress = serverAdress;
-    }
 }

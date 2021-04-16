@@ -6,8 +6,8 @@ import com.smk.common.netty.constant.NettyConstant;
 import com.smk.common.netty.message.RequestMsgPacket;
 import com.smk.common.netty.message.ResponseMsgPacket;
 import com.smk.common.util.SerialNumberUtils;
+import com.smk.common.util.SpringContextUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Proxy;
@@ -27,11 +27,6 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Slf4j
 public class NettyProxy {
-    @Value("${netty.server.host:localhost}")
-    private String host;
-
-    @Value("${netty.server.port:9092}")
-    private Integer port;
 
     private static ThreadPoolExecutor threadPoolExecutor =
             new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
@@ -61,7 +56,7 @@ public class NettyProxy {
                     requestMsgPacket.setVersion(NettyConstant.VERSION);
                     requestMsgPacket.setSerialNumber(SerialNumberUtils.getSeriaNumber());
                     requestMsgPacket.setMsgType(MsgType.REQUEST);
-                    requestMsgPacket.setInterfaceName(interfaceClass.getName() + "Impl");
+                    requestMsgPacket.setInterfaceName(interfaceClass.getName());
                     requestMsgPacket.setMethodName(method.getName());
 
 
@@ -78,17 +73,15 @@ public class NettyProxy {
                     //--长连接
 
                     //初始化RPC客户端
-                    NettyClientHandler client=NettyClientManager.getInstance().chooseHandler();
+//                    NettyClientHandler client = NettyClientManager.getInstance().chooseHandler();
+                    NettyClientHandler client =
+                            ((NettyClientManager) SpringContextUtil.getBean("nettyClientManager")).chooseHandler();
                     // 设置参数
                     client.setRequestMsgPacket(requestMsgPacket);
 
                     long startTime = System.currentTimeMillis();
 
                     ResponseMsgPacket response = threadPoolExecutor.submit(client).get();
-                    //--
-                    //非线程池调用：通过RPC客户端发送rpc请求并且获取rpc响应
-//                    NettyClientHandlerNoThread client = new NettyClientHandlerNoThread(host, port);
-//                    ResponseMsgPacket response = client.send(requestMsgPacket);
                     log.debug("send rpc request elapsed time: {}ms...", System.currentTimeMillis() - startTime);
 
                     if (response == null) {

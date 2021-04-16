@@ -1,7 +1,5 @@
 package com.smk.business.netty.client.longConnection;
 
-import com.google.common.collect.Lists;
-import com.smk.common.netty.constant.NettyConstant;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -14,13 +12,16 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.net.InetSocketAddress;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * @Description:
@@ -35,80 +36,94 @@ import java.util.concurrent.locks.ReentrantLock;
 @Slf4j
 public class NettyClientManager {
 
-    @Value("${netty.server.address:localhost:9092}")
-    private String address;
+    private EventLoopGroup eventLoopGroup = new NioEventLoopGroup(4);
+    private static ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(4, 8,
+            600L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(1000));
 
     private Map<ServerAdress, NettyClientHandler> connectedServerNodes = new ConcurrentHashMap<>();
+    List<ServerAdress> serverAdresses = new ArrayList<>();
 
-    private ReentrantLock lock = new ReentrantLock();
-    private Condition connected = lock.newCondition();
+    private AtomicInteger roundRobin = new AtomicInteger(0);
 
-    private Random random = new Random();
-    private long waitTimeout = 5000;
-
-    private static ThreadPoolExecutor threadPoolExecutor =
-            new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
-                    Runtime.getRuntime().availableProcessors(),
-                    600L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(1000));
+    private NettyClientManager() {
+    }
 
     private static class SingletonHolder {
         private static final NettyClientManager instance = new NettyClientManager();
     }
 
     public static NettyClientManager getInstance() {
-        return SingletonHolder.instance;
+        return NettyClientManager.SingletonHolder.instance;
     }
 
+    /**
+     * 配置的远端地址：如
+     */
+    @Value("${netty.server.addresses:}")
+    private String addresses;
+
+    /**
+     * 逐个连接每个远端地址
+     */
     @PostConstruct
-    public void connectServers() {
-        List<ServerAdress> serverAdresses = parseServerAddress();
-        connectServerNodes(serverAdresses);
+    public void connectServerNodes() {
+        List<String> addressList = Arrays.asList(addresses.split(","));
+
+        serverAdresses = addressList.stream().map((addr) -> {
+            ServerAdress serverAdress = new ServerAdress();
+            serverAdress.setHost(addr.split(":")[0]);
+            serverAdress.setPort(Integer.parseInt(addr.split(":")[1]));
+            return serverAdress;
+        }).collect(Collectors.toList());
+
+        serverAdresses.forEach((serverAdresse) -> connectServerNode(serverAdresse));
     }
 
+    /**
+     * 连接远端地址
+     *
+     * @param serverAdress
+     */
+    private void connectServerNode(ServerAdress serverAdress) {
 
-    private void connectServerNodes(List<ServerAdress> serverAdresses) {
-        for (ServerAdress serverAdress : serverAdresses) {
-            final InetSocketAddress remotePeer = new InetSocketAddress(serverAdress.getHost(), serverAdress.getPort());
-            threadPoolExecutor.submit(() -> {
-                EventLoopGroup group = new NioEventLoopGroup();
+        log.info("New service node, host: {}, port: {}", serverAdress.getHost(), serverAdress.getPort());
+        final InetSocketAddress inetSocketAddress = new InetSocketAddress(serverAdress.getHost(),
+                serverAdress.getPort());
+        threadPoolExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
                 Bootstrap b = new Bootstrap();
-                b.group(group)
+                b.group(eventLoopGroup)
                         .channel(NioSocketChannel.class)
                         .handler(new NettyClientInitializer());
 
-                ChannelFuture channelFuture = b.connect(remotePeer);
+                ChannelFuture channelFuture = b.connect(inetSocketAddress);
                 channelFuture.addListener(new ChannelFutureListener() {
                     @Override
                     public void operationComplete(final ChannelFuture channelFuture) throws Exception {
                         if (channelFuture.isSuccess()) {
-                            log.info("Successfully connect to remote server, remote peer = " + remotePeer);
+                            log.info("Successfully connect to remote server, remote peer = " + inetSocketAddress);
                             NettyClientHandler handler =
                                     channelFuture.channel().pipeline().get(NettyClientHandler.class);
                             connectedServerNodes.put(serverAdress, handler);
-                            handler.setServerAdress(serverAdress);
-                            //可以获取客户端了
-                            signalAvailableHandler();
                         } else {
-                            log.error("Can not connect to remote server, remote peer = " + remotePeer);
+                            log.error("Can not connect to remote server, remote peer = " + inetSocketAddress);
                         }
                     }
                 });
-            });
-        }
+            }
+        });
     }
 
+    /**
+     * 选择一个handler
+     *
+     * @return
+     * @throws Exception
+     */
     public NettyClientHandler chooseHandler() throws Exception {
-        int size = connectedServerNodes.values().size();
-        while (size <= 0) {
-            try {
-                waitingForHandler();
-                size = connectedServerNodes.values().size();
-            } catch (InterruptedException e) {
-                log.error("Waiting for available service is interrupted!", e);
-            }
-        }
-        ServerAdress serverAddress = getRandomServerAddress(connectedServerNodes.keySet());
-        NettyClientHandler handler = connectedServerNodes.get(serverAddress);
+        ServerAdress serverAdress = route();
+        NettyClientHandler handler = connectedServerNodes.get(serverAdress);
         if (handler != null) {
             return handler;
         } else {
@@ -116,57 +131,20 @@ public class NettyClientManager {
         }
     }
 
-    private ServerAdress getRandomServerAddress(Set<ServerAdress> serverAdresses) {
-        List<ServerAdress> serverAdressesCopy = Lists.newArrayList(serverAdresses);
-        int size = serverAdressesCopy.size();
-        // Random
-        return serverAdressesCopy.get(random.nextInt(size));
+    /**
+     * 随机选择一个
+     *
+     * @return
+     */
+    private ServerAdress route() {
+        int size = serverAdresses.size();
+        // Round robin
+        int index = (roundRobin.getAndAdd(1) + size) % size;
+        return serverAdresses.get(index);
     }
 
-    private void signalAvailableHandler() {
-        lock.lock();
-        try {
-            connected.signalAll();
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    private boolean waitingForHandler() throws InterruptedException {
-        lock.lock();
-        try {
-            log.warn("Waiting for available service");
-            return connected.await(this.waitTimeout, TimeUnit.MILLISECONDS);
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    private List<ServerAdress> parseServerAddress() {
-        String[] addressArr = this.address.split(",");
-        List<ServerAdress> serverAdresses = new ArrayList<>(addressArr.length);
-        for (String addr : addressArr) {
-            int port = NettyConstant.DEFAULT_SERVER_PORT;
-            String host = addr;
-            int index = addr.lastIndexOf(':');
-            if (index >= 0) {
-                // otherwise : is at the end of the string, ignore
-                if (index < addr.length() - 1) {
-                    port = Integer.parseInt(host.substring(index + 1));
-                }
-                host = addr.substring(0, index);
-            }
-            serverAdresses.add(new ServerAdress(host, port));
-
-        }
-        return serverAdresses;
-    }
-
-    private class ConnectAction implements Runnable {
-
-        @Override
-        public void run() {
-
-        }
+    public void stop() {
+        threadPoolExecutor.shutdown();
+        eventLoopGroup.shutdownGracefully();
     }
 }
