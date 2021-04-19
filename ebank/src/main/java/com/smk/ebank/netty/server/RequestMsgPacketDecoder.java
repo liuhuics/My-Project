@@ -1,7 +1,6 @@
 package com.smk.ebank.netty.server;
 
 import com.google.common.collect.Maps;
-import com.smk.common.exception.BizException;
 import com.smk.common.netty.constant.MsgType;
 import com.smk.common.netty.constant.NettyConstant;
 import com.smk.common.netty.message.RequestMsgPacket;
@@ -9,6 +8,7 @@ import com.smk.common.netty.util.FastJsonSerializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,17 +23,26 @@ import java.util.Map;
  * @Date: 2020/8/25 14:04
  * Copyright (c) 2020
  */
+@Slf4j
 public class RequestMsgPacketDecoder extends ByteToMessageDecoder {
     //ByteBuf不需要调用flip()来切换读写
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf in, List<Object> list) throws Exception {
         int length = in.readableBytes();
         if (length < 13) {
-            throw new BizException("报文长度不够");
+            log.info("报文长度不够");
+            return;
+        }
+        int magicNum = in.readInt();
+        if (magicNum != NettyConstant.MAGIC_NUMBER) { // 魔数校验不通过，则关闭连接
+            log.error("魔数校验失败");
+            in.clear();
+            channelHandlerContext.channel().close();
+            return;
         }
         RequestMsgPacket packet = new RequestMsgPacket();
         // 魔数
-        packet.setMagicNumber(in.readInt());
+        packet.setMagicNumber(magicNum);
         // 版本
         packet.setVersion(in.readInt());
         // 流水号

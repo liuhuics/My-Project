@@ -18,7 +18,7 @@ public class NettyConstant {
 
     public static final Charset PROTOCOL_ENCODING = Charset.forName(CharsetNames.UTF_8);
 
-    public static final int MAGIC_NUMBER = 123456;
+    public static final int MAGIC_NUMBER = 534288;
 
     public static final int VERSION = 1;
 

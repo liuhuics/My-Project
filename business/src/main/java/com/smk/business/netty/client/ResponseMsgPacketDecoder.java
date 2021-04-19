@@ -2,7 +2,6 @@ package com.smk.business.netty.client;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
-import com.smk.common.exception.BizException;
 import com.smk.common.netty.constant.MsgType;
 import com.smk.common.netty.constant.NettyConstant;
 import com.smk.common.netty.message.ResponseMsgPacket;
@@ -10,6 +9,7 @@ import com.smk.common.netty.util.FastJsonSerializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Map;
@@ -23,16 +23,25 @@ import java.util.Map;
  * @Date: 2020/8/26 10:39
  * Copyright (c) 2020
  */
+@Slf4j
 public class ResponseMsgPacketDecoder extends ByteToMessageDecoder {
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         int length = in.readableBytes();
         if (length < 13) {
-            throw new BizException("报文长度不够");
+            log.info("报文长度不够");
+            return;
+        }
+        int magicNum = in.readInt();
+        if (magicNum != NettyConstant.MAGIC_NUMBER) { // 魔数校验不通过，则关闭连接
+            log.error("魔数校验失败");
+            in.clear();
+            ctx.channel().close();
+            return;
         }
         ResponseMsgPacket packet = new ResponseMsgPacket();
         // 魔数
-        packet.setMagicNumber(in.readInt());
+        packet.setMagicNumber(magicNum);
         // 版本
         packet.setVersion(in.readInt());
         // 流水号
