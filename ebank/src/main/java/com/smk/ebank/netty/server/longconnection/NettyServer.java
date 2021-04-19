@@ -78,11 +78,11 @@ public class NettyServer implements ApplicationContextAware {
                         protected void initChannel(Channel ch) throws Exception {
                             ch.pipeline()
                                     .addLast(new IdleStateHandler(0, 0, 60, TimeUnit.SECONDS))
-                                    .addLast(new LengthFieldBasedFrameDecoder(65536, 0, 4, 0, 4))
-                                    .addLast(new LengthFieldPrepender(4))
-                                    .addLast(new RequestMsgPacketDecoder())
-                                    .addLast(new ResponseMsgPacketEncoder())
-                                    .addLast(handler);
+                                    .addLast(new LengthFieldBasedFrameDecoder(65535, 0, 4, 0, 4))//入站处理
+                                    .addLast(new LengthFieldPrepender(4))//出站处理
+                                    .addLast(new RequestMsgPacketDecoder())//入站处理
+                                    .addLast(new ResponseMsgPacketEncoder())//出站处理
+                                    .addLast(handler);//入站处理
 
 
                         }

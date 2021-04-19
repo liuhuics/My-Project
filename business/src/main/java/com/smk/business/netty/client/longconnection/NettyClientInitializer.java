@@ -23,12 +23,12 @@ public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         socketChannel.pipeline()
                 .addLast(new IdleStateHandler(0, 0, NettyConstant.BEAT_INTERVAL))
-                .addLast(new LengthFieldBasedFrameDecoder(65536, 0, 4, 0, 4))
-                .addLast(new LengthFieldPrepender(4))
+                .addLast(new LengthFieldBasedFrameDecoder(65535, 0, 4, 0, 4))//入站处理
+                .addLast(new LengthFieldPrepender(4))//出站处理
                 /*将RPC请求进行编码（发送请求）*/
-                .addLast(new RequestMsgPacketEncoder())
+                .addLast(new RequestMsgPacketEncoder())//出站处理
                 /*将RPC响应进行解码（返回响应）*/
-                .addLast(new ResponseMsgPacketDecoder())
-                .addLast(new NettyClientHandler());
+                .addLast(new ResponseMsgPacketDecoder())//入站处理
+                .addLast(new NettyClientHandler());//入站处理
     }
 }
