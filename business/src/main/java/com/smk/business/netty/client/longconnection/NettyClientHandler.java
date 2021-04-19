@@ -1,4 +1,4 @@
-package com.smk.business.netty.client.longConnection;
+package com.smk.business.netty.client.longconnection;
 
 import com.alibaba.fastjson.JSON;
 import com.smk.common.netty.message.HeartbeatRequestPacket;

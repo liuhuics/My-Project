@@ -1,7 +1,7 @@
 package com.smk.business.controller;
 
 import com.smk.api.xy.XyExampleService;
-import com.smk.business.netty.client.longConnection.NettyProxy;
+import com.smk.business.netty.client.longconnection.NettyProxy;
 import com.smk.common.vo.BaseResult;
 import com.smk.common.vo.BaseResultBuilder;
 import lombok.extern.slf4j.Slf4j;

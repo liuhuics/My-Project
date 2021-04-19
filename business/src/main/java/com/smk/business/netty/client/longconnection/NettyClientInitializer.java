@@ -1,4 +1,4 @@
-package com.smk.business.netty.client.longConnection;
+package com.smk.business.netty.client.longconnection;
 
 import com.smk.business.netty.client.RequestMsgPacketEncoder;
 import com.smk.business.netty.client.ResponseMsgPacketDecoder;
@@ -23,7 +23,7 @@ public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         socketChannel.pipeline()
                 .addLast(new IdleStateHandler(0, 0, NettyConstant.BEAT_INTERVAL))
-                .addLast(new LengthFieldBasedFrameDecoder(1024, 0, 4, 0, 4))
+                .addLast(new LengthFieldBasedFrameDecoder(65536, 0, 4, 0, 4))
                 .addLast(new LengthFieldPrepender(4))
                 /*将RPC请求进行编码（发送请求）*/
                 .addLast(new RequestMsgPacketEncoder())

@@ -1,4 +1,4 @@
-package com.smk.ebank.netty.server.longConnection;
+package com.smk.ebank.netty.server.longconnection;
 
 import com.alibaba.fastjson.JSON;
 import com.smk.common.netty.constant.MsgType;

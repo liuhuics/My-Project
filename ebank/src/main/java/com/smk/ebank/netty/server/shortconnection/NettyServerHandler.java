@@ -1,4 +1,4 @@
-package com.smk.ebank.netty.server.shortConnection;
+package com.smk.ebank.netty.server.shortconnection;
 
 import com.alibaba.fastjson.JSON;
 import com.smk.common.netty.message.RequestMsgPacket;

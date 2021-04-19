@@ -1,4 +1,4 @@
-package com.smk.business.netty.client.longConnection;
+package com.smk.business.netty.client.longconnection;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;

@@ -1,4 +1,4 @@
-package com.smk.business.netty.client.shortConnection;
+package com.smk.business.netty.client.shortconnection;
 
 import com.alibaba.fastjson.JSON;
 import com.smk.business.netty.client.RequestMsgPacketEncoder;

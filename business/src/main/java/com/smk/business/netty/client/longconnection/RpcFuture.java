@@ -1,4 +1,4 @@
-package com.smk.business.netty.client.longConnection;
+package com.smk.business.netty.client.longconnection;
 
 import com.smk.common.netty.message.RequestMsgPacket;
 import com.smk.common.netty.message.ResponseMsgPacket;

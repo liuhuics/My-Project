@@ -1,4 +1,4 @@
-package com.smk.ebank.netty.server.shortConnection;
+package com.smk.ebank.netty.server.longconnection;
 
 import com.smk.ebank.netty.config.RpcService;
 import com.smk.ebank.netty.server.RequestMsgPacketDecoder;
@@ -9,6 +9,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
+import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,16 +21,17 @@ import javax.annotation.PostConstruct;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
- * @Description: Netty 服务，用于短连接
+ * @Description: Netty 服务，用于长连接
  * @author: liuhui
  * @version: 1.0
  * @since: JDK 1.8
  * @Date: 2020/9/1 16:38
  * Copyright (c) , .
  */
-//@Component
+@Component
 @Slf4j
 public class NettyServer implements ApplicationContextAware {
     /**
@@ -75,7 +77,8 @@ public class NettyServer implements ApplicationContextAware {
                     .childHandler(new ChannelInitializer<Channel>() {
                         protected void initChannel(Channel ch) throws Exception {
                             ch.pipeline()
-                                    .addLast(new LengthFieldBasedFrameDecoder(1024, 0, 4, 0, 4))
+                                    .addLast(new IdleStateHandler(0, 0, 60, TimeUnit.SECONDS))
+                                    .addLast(new LengthFieldBasedFrameDecoder(65536, 0, 4, 0, 4))
                                     .addLast(new LengthFieldPrepender(4))
                                     .addLast(new RequestMsgPacketDecoder())
                                     .addLast(new ResponseMsgPacketEncoder())
